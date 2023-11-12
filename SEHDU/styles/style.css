@@ -1,0 +1,185 @@
+:root{
+	--color-primario: rgba(28, 4, 47, 0.95);
+	--color-secundario: rgb(51, 166, 211);
+	--color-terciario: rgb(154, 84, 219);
+	--color-fondo-claro: rgba(154, 84, 219, 0.8);
+	--color-claro: #eee;
+	--color-oscuro: #111;
+	--fondo-oscuro: rgb(32,6,75);
+	--gradiente: linear-gradient(90deg, rgba(32,6,75,1) 0%, rgba(101,26,199,1) 76%);
+}
+
+html {
+	font-size: 62.5%;
+	font-family: 'Jost', sans-serif;
+	user-select: none;
+	/* font-family: 'Nunito', sans-serif; */
+	scroll-snap-type: y mandatory;
+	scroll-padding-top: 8rem;
+	box-sizing: border-box;	
+}
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+body {
+	display: flex;
+	flex-direction: column;
+	background: rgb(255,255,255);
+	background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(245,237,255,1) 76%);
+}
+h1 {
+	font-size: 3rem;
+}
+h2 {
+	font-size: 2rem;
+}
+h3 {
+	font-size: 2.5rem;
+}
+h5 {
+	font-size: 1.5rem;
+}
+/*GLOBALES*/
+.txt-c {
+	text-align: center;
+}
+.flex-column {
+	flex-direction: column;
+}
+.flex-aj-c {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.flex-a-c {
+	display: flex;
+	align-items: center;
+}
+
+.flex-j-c {
+	display: flex;
+	justify-content: center;
+}
+.j-a-c {
+	align-self: center;
+	justify-self: center;
+}
+.j-c {
+	justify-self: center;
+}
+.a-c {
+	align-self: center;
+}
+.a-s {
+	align-self: self-start;
+}
+.w-100 {
+	width: 100%;
+}
+.h-100 {
+	height: 100%;
+}
+.link {
+	text-decoration: none;
+	letter-spacing: 0.1rem;
+	color: var(--color-claro);
+	padding: 1rem 2rem;
+	text-align: center;
+	transition: all 0.1s;
+}
+.link:hover {
+	font-weight: bold;
+	background-color: #00000017;
+	border-radius: .5rem .5rem 0 0;
+	border-bottom: solid .1rem var(--color-claro);
+}
+.container {
+	margin: 0 auto;
+}
+.section-separation {
+	height: 100vh;
+	background: linear-gradient(90deg, rgba(32,6,75,1) 0%, rgba(101,26,199,1) 76%);
+	color: var(--color-claro);
+	text-transform: uppercase;
+	padding: 0 3rem;
+	scroll-snap-align: end;
+	scroll-snap-stop: always;
+}
+.section-separation h3 {
+	font-size: 8.5rem;
+	text-shadow: 0 0 1rem rgba(255, 255, 255, 1);
+	height: 100%;
+	background-image: url(../media/section-admin.png);
+	background-repeat: no-repeat;
+	background-position: 50%;
+}
+/*HEADER*/
+.header {
+	justify-content: space-around;
+	background: var(--fondo-oscuro);
+	background: var(--gradiente);
+	min-height: 6rem;
+	padding: 1rem 3rem;
+	top: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+	z-index: 10;
+	flex-wrap: wrap;
+}
+.navegador {
+	justify-content: space-evenly;
+	font-size: 1.6rem;
+	width: 40%;
+}
+.logo-container {
+	width: 40%;
+}
+.img-logo {
+	height: 4rem;
+}
+.menu-icon .icon{
+	cursor: pointer;
+	margin-left: 1.5rem;
+}
+.menu-icon img {
+	height: 5.4rem;
+	border-radius: 50%;
+	object-fit: cover;
+	width: 5.4rem;
+	cursor: pointer;
+}
+
+/*MAIN*/
+main {
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+}
+/*FOOTER*/
+footer {
+	font-size: 1.45rem;
+	background-color: var(--fondo-oscuro);
+	background: var(--gradiente);
+	padding: 6rem 6rem;
+	color: var(--color-claro);
+	gap: 3rem;
+	scroll-snap-align: end;
+    scroll-snap-stop: always;
+}
+.footer-sections {
+	gap: 6rem;
+}
+.footer-sections-container {
+	width: 40%;
+	align-self: flex-start;
+}
+.icon-socialmedia {
+	height: 4.2rem;
+}
+.icon-socialmedia:hover {
+	filter: brightness(125%)
+}
+.icon-logo-shedu {
+	height: 3.5rem;
+	margin-bottom: -2rem;
+}
