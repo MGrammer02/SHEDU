@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shedu Plataform</title>
-    <link rel="stylesheet" href="styles/normalize.css">
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/home.css">
-    <link rel="icon" href="media/shedu-logo.ico">
+    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='images/shedu-logo.ico') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700;800&family=Nunito:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
 <body>
     <header class="header flex-a-c">
         <div class="logo-container">
-            <a href="index.html"><img class="img-logo" src="media/shedu-logo-white.png" alt="shedul logo"></a>
+            <a href="/"><img class="img-logo" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="shedul logo"></a>
         </div>
         <nav class="navegador flex-a-c h-100">
             <a class="link" href="#">Horarios</a>
@@ -34,17 +34,17 @@
         </div>
     </header>
     <main class="flex-aj-c">
-        <h1 class="titulo-main">¡Bienvenido!<br><span class="name-user">Miguel Gómez</span></h1>
+        <h1 class="titulo-main">¡Bienvenido!<br><span class="name-user">{{user}}</span></h1>
         <div class="main_contenedor flex-aj-c">
             <div class="main_div flex-aj-c  flex-column">
                 <div class="main-img-container flex-a-c">
-                    <img class="main-img" src="media/create-horarios.png" alt="Crear Horarios">
+                    <img class="main-img" src="{{ url_for('static', filename='images/create-horarios.png') }}" alt="Crear Horarios">
                 </div>
                 <h3 class="w-100 flex-aj-c">Crear horarios</h3>                
             </div>
             <div class="main_div flex-aj-c flex-column">
                 <div class="main-img-container flex-a-c">
-                    <img class="main-img" src="media/admin-horarios.png" alt="Administrar horarios">
+                    <img class="main-img" src="{{ url_for('static', filename='images/admin-horarios.png') }}" alt="Administrar horarios">
                 </div>
                 <h3 class="w-100 flex-aj-c">Administrar Horarios</h3>
             </div> 
@@ -57,7 +57,7 @@
         <div id="adm-teachers" class="section a-c">
             <div class="section-div flex-aj-c">
                 <div class="section-container-img flex-aj-c">
-                    <img class="section-img" src="media/admin-personal.png" alt="Administrar personal">
+                    <img class="section-img" src="{{ url_for('static', filename='images/admin-personal.png') }}" alt="Administrar personal">
                 </div>
                 <div class="section-info-container">
                     <p>Administrar personal</p>
@@ -67,7 +67,7 @@
         <div id="adm-subjects" class="section a-c">
             <div class="section-div flex-aj-c">
                 <div class="section-container-img flex-aj-c">
-                    <img class="section-img" src="media/admin-materias.png" alt="Administrar Materias">
+                    <img class="section-img" src="{{ url_for('static', filename='images/admin-materias.png') }}" alt="Administrar Materias">
                 </div>
                 <div class="section-info-container">
                     <p>Administrar Materias</p>
@@ -77,7 +77,7 @@
         <div id="adm-courses" class="section a-c">
             <div class="section-div flex-aj-c">
                 <div class="section-container-img flex-aj-c">
-                    <img class="section-img" src="media/admin-cursos.png" alt="Administrar Cursos">
+                    <img class="section-img" src="{{ url_for('static', filename='images/admin-cursos.png') }}" alt="Administrar Cursos">
                 </div>
                 <div class="section-info-container">
                     <p>Administrar Cursos</p>
@@ -87,18 +87,18 @@
         <div id="adm-sheduls" class="section a-c">
             <div class="section-div flex-aj-c">
                 <div class="section-container-img flex-aj-c">
-                    <img class="section-img" src="media/admin-horarios.png" alt="Administrar personal">
+                    <img class="section-img" src="{{ url_for('static', filename='images/admin-horarios.png') }}" alt="Administrar personal">
                 </div>
                 <div class="section-info-container">
                     <p>Administrar Horarios</p>
                 </div>
             </div>
         </div>
-        <script src="scripts/home.js"></script>      
+        <script src="{{ url_for('static', filename='scripts/home.js') }}"></script>      
     </section>
 
     <footer class="flex-aj-c flex-column">
-        <img class="icon-logo-shedu" src="media/shedu-logo-white.png" alt="icono-shedu">
+        <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">
         <div class="footer-sections flex-aj-c">
             <div class="footer-sections-container">
                 <div class="w-100">
@@ -106,9 +106,9 @@
                     <p>Se visualiza a Shedu como un software de preferencia y de gran utilidad en la creación de horarios escolares debido a su gran desempeño y a todas sus funcionalidades.</p>
                 </div>
                 <div>
-                    <a href="#"><img class="icon-socialmedia" src="media/facebook-icon.png" alt="boton-facebook"></a>
-                    <a href="#"><img class="icon-socialmedia" src="media/instagram-icon.png" alt="boton-instagram"></a>
-                    <a href="#"><img class="icon-socialmedia" src="media/correo-icon.png" alt="boton-mail"></a>
+                    <a href="#"><img class="icon-socialmedia" src="{{ url_for('static', filename='images/facebook-icon.png') }}" alt="boton-facebook"></a>
+                    <a href="#"><img class="icon-socialmedia" src="{{ url_for('static', filename='images/instagram-icon.png') }}" alt="boton-instagram"></a>
+                    <a href="#"><img class="icon-socialmedia" src="{{ url_for('static', filename='images/correo-icon.png') }}" alt="boton-mail"></a>
                 </div>
             </div>
             <div class="footer-sections-container">

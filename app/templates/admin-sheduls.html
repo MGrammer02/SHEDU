@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="icon" href="media/shedu-logo.ico">
-    <title>Administración: Cursos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='images/shedu-logo.ico') }}">
+    <title>Administración:  Horarios</title>
 </head>
 <body>
     <header class="header flex-a-c">
         <div class="logo-container">
-            <a href="index.html"><img class="img-logo" src="media/shedu-logo-white.png" alt="shedul logo"></a>
+            <a href="/"><img class="img-logo" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="shedul logo"></a>
         </div>
         <nav class="navegador flex-a-c h-100">
             <a class="link" href="#">Horarios</a>
@@ -29,12 +30,11 @@
         </div>
     </header>
     <main>
-        <a href="index.html">Inicio</a>
-        <h1>PRUEBA</h1>
-        <script src="scripts/script.js"></script>
+        <h1>Administración de Docentes</h1>
+        <h2>{{sheduls}}</h2>
     </main>
     <footer class="flex-aj-c flex-column">
-        <img class="icon-logo-shedu" src="media/shedu-logo-white.png" alt="icono-shedu">
+        <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">
         <div class="footer-sections flex-aj-c">
             <div class="footer-sections-container">
                 <div class="w-100">
@@ -42,9 +42,9 @@
                     <p>Se visualiza a Shedu como un software de preferencia y de gran utilidad en la creación de horarios escolares debido a su gran desempeño y a todas sus funcionalidades.</p>
                 </div>
                 <div>
-                    <a href="#"><img class="icon-socialmedia" src="media/facebook-icon.png" alt="boton-facebook"></a>
-                    <a href="#"><img class="icon-socialmedia" src="media/instagram-icon.png" alt="boton-instagram"></a>
-                    <a href="#"><img class="icon-socialmedia" src="media/correo-icon.png" alt="boton-mail"></a>
+                    <a href="#"><img class="icon-socialmedia" src="{{ url_for('static', filename='images/facebook-icon.png') }}" alt="boton-facebook"></a>
+                    <a href="#"><img class="icon-socialmedia" src="{{ url_for('static', filename='images/instagram-icon.png') }}" alt="boton-instagram"></a>
+                    <a href="#"><img class="icon-socialmedia" src="{{ url_for('static', filename='images/correo-icon.png') }}" alt="boton-mail"></a>
                 </div>
             </div>
             <div class="footer-sections-container">
