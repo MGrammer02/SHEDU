@@ -40,10 +40,17 @@ h5 {
 	font-size: 1.5rem;
 }
 /*GLOBALES*/
+.username {
+	color: #fff;
+	font-size: 1.5rem;
+	font-weight:bold;
+	margin-right:2rem
+}
 .txt-c {
 	text-align: center;
 }
 .flex-column {
+	display: flex;
 	flex-direction: column;
 }
 .flex-aj-c {
@@ -154,7 +161,10 @@ h5 {
 main {
 	scroll-snap-align: start;
 	scroll-snap-stop: always;
+	min-height: 100vh;
+	padding: 12rem 10rem 4rem;
 }
+
 /*FOOTER*/
 footer {
 	font-size: 1.45rem;

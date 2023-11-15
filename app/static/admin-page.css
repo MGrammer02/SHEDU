@@ -1,0 +1,64 @@
+table {
+    width: 100%;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+button {
+    border: none;
+    border-radius: 0.3rem;
+}
+.btn-add {
+    width: 20rem;
+    padding: 1rem 2rem;
+    background-color: rgb(5, 161, 16);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.3rem;
+    align-self: flex-end;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+}
+.btn-add:hover {
+    background-color: rgb(8, 150, 17);
+}
+.btn-edit {
+    background-color: var(--color-secundario);
+}
+.btn-edit:hover {
+    background-color: rgb(46, 154, 196);
+}
+.btn-delete {
+    background-color: #b81313;
+    margin-left: .5rem;
+}
+.btn-delete:hover {
+    background-color: #a71212;
+}
+.btn-edit, .btn-delete {
+    padding: .5rem 1.5rem;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+button:active {
+    position: relative;
+    top: .1rem;
+}
+thead {
+    background-color: var(--fondo-oscuro);
+    color: #fff;
+    height: 4rem;
+    font-size: 1.5rem;
+}
+tbody {
+    background-color: rgb(228, 206, 249);
+    height: 4rem;
+    font-size: 1.5rem;
+    text-align: center;
+}
+tbody td {
+    height: 4rem;
+    cursor: pointer;
+}
+tbody tr:hover {
+    background-color: rgb(222, 192, 250);
+}

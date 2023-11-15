@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='images/shedu-logo.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin-page.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/shedu-logo.ico') }}">
     <title>Administración: Materias</title>
 </head>
 <body>
@@ -18,25 +19,55 @@
             <a class="link" href="prueba.html">Configuración</a>
         </nav>
         <div class="menu-icon flex-a-c">
+            <span class="username">{{ current_user.teacher.first_name + ' ' + current_user.teacher.first_lastname }}</span>
             <div>
                 <img src="https://i.pinimg.com/222x/5d/0e/94/5d0e94950f0a5a6f0fea753aaf174da1.jpg" alt="usuario-icono">
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <a href="/logout"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-logout" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M4 6l16 0" />
-                <path d="M4 12l16 0" />
-                <path d="M4 18l16 0" />
-            </svg>
+                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+                <path d="M9 12h12l-3 -3" />
+                <path d="M18 15l3 -3" />
+            </svg></a>
         </div>
     </header>
-    <main>
-        <h1>Administración de Docentes</h1>
-        <table>
-            <th>Nombres</th>
-            <th>Apellidos</th>
-            <th>Numero de celular</th>
-
-        </table>
+    <main class="flex-column">
+        <h1>Administración de Materias</h1>
+        {% if subjects%}
+                <button class="btn-add">Añadir Materias</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Salutación</th>
+                            <th>Primer Nombre</th>
+                            <th>Segundo Nombre</th>
+                            <th>Primer Apellido</th>
+                            <th>Segundo Apellido</th>
+                            <th>Sexo</th>
+                            <th>Horas Laborales</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                {% for subject in subjects %}
+                    <tr>
+                        <td>{{subject.teacher_id}}</td>
+                        <td>{{subject.salutation.salutation}}</td>
+                        <td>{{subject.first_name}}</td>                    
+                        <td>{{subject.second_name}}</td>
+                        <td>{{subject.first_lastname}}</td>                    
+                        <td>{{subject.second_lastname}}</td>      
+                        <td>{{subject.gender.gender}}</td>                
+                        <td>{{subject.work_hours}}</td>                                                                                         
+                        <td><button id="{{subject.subject_id}}" class="btn-edit">Editar</button><button id="{{subject.subject_id}}" class="btn-delete">Eliminar</button></td>                                    
+                    </tr>  
+                    </tbody>
+                </table>
+                {% endfor %}                
+                {% else %}
+                <h3 class="txt-c">"NO HAY DATOS"</h3>
+        {% endif %}
     </main>
     <footer class="flex-aj-c flex-column">
         <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">

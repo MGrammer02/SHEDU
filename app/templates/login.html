@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shedu: Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/shedu-logo.ico') }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700;800&family=Nunito:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="flex-aj-c flex-column">
+    <img src="{{ url_for('static', filename='images/shedu-logo-white.png') }}">
+    <div class="form-container flex-column flex-aj-c">
+    <h2>Iniciar Sesión</h2>
+        <form  class="flex-aj-c flex-column" method="post" action="{{ url_for('login') }}">
+            {{ form.csrf_token }}
+            <div class="flex-j-c flex-column">
+                <label for="username">Usuario</label>
+                <input maxlength="15" type="text" name="username" required><br>  
+            </div>
+            <div class="flex-j-c flex-column">
+                <label for="password">Contraseña</label>
+                <input maxlength="20" type="password" name="password" required><br>   
+            </div>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+    </div>
+    <p class="txt-c">Todos los derechos reservados &COPY; <b>SHEDU</b> By Miguel Gómez</p>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="messages flex-aj-c flex-column">
+                <li>{{ messages[-1] }}</li>
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
