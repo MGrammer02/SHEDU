@@ -16,12 +16,16 @@ img {
     margin: 0 auto 1rem;
 }
 h2 {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
+    font-weight: lighter;
+    letter-spacing: 0.1rem;
+    line-height: .5;
+    text-transform: uppercase;
 }
 .form-container {
     z-index: 15;
-    width: 60rem;
-    padding: 2rem 6rem;
+    width: 50rem;
+    padding: 3rem 4rem;
     border-radius: .7rem;
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
