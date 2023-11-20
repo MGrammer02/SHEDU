@@ -59,15 +59,67 @@
                     <td>{{teacher.first_lastname}}</td>                    
                     <td>{{teacher.second_lastname}}</td>      
                     <td>{{teacher.gender.gender}}</td>                
-                    <td>{{teacher.work_hours}}</td>                                                                                         
-                    <td><button id="{{teacher.teacher_id}}" class="btn-edit">Editar</button><button id="{{teacher.teacher_id}}" class="btn-delete">Eliminar</button></td>                                    
-                </tr>  
+                    <td>{{teacher.work_hours}}</td>                                                                     
+                    <td><button id="{{teacher.teacher_id}}" class="btn-edit" onclick="btnsEdit({{teacher.teacher_id}})">Editar</button><button id="{{teacher.teacher_id}}" class="btn-delete" onclick="deleteTeacher({{teacher.teacher_id}})">Eliminar</button></td>                                    
+                </tr>
             {% endfor %}
             </tbody>
         </table>
         {% else %}
             <h3 class="txt-c">"NO HAY DATOS"</h3>
         {% endif %}
+            <div class="modal-container closed flex-aj-c">
+        <div class="modal">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+            </svg>
+            <h3 id="title_modal" class="txt-c"></h3>
+            <form id="add-info-form" class="flex-aj-c">
+                <div class="flex-j-c flex-column">
+                    <label>Primer Nombre</label>
+                    <input id="firstName" maxlength="25" name="firstName" required>
+                </div>
+                <div class="flex-j-c flex-column">
+                    <label>Segundo Nombre</label>
+                    <input id="secondName" maxlength="25" name="secondName" required>
+                </div>
+                <div class="flex-j-c flex-column">
+                    <label>Primer Apellido</label>
+                    <input id="firstLastName" maxlength="25" name="firstLastName" required>
+                </div>
+                <div class="flex-j-c flex-column">
+                    <label>Segundo Apellido</label>
+                    <input id="secondLastName" maxlength="25" name="secondLastName" required>
+                </div>
+                <div class="flex-j-c flex-column">
+                    <label>Salutación</label>
+                    <select id="salutation" name="salutation" required>
+                        <option disabled selected hidden></option>
+                        {% for salutation in salutations %}
+                            <option value="{{salutation.salutation_id}}">{{salutation.salutation}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex-j-c flex-column">
+                    <label class="label">Género</label>
+                    <select id="gender" name="gender" required>
+                        <option disabled selected hidden></option>
+                        {% for gender in genders %}
+                            <option value="{{gender.gender_id}}">{{gender.gender}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex-j-c flex-column">
+                    <label>Horas laborales</label>
+                    <input id="hours" type="number" maxlength="2" name="hours" value="8" required>
+                </div>
+                <input id="btn_modal" type="submit" value="">
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='scripts/admin-teachers.js') }}"></script>
     </main>
     <footer class="flex-aj-c flex-column">
         <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">

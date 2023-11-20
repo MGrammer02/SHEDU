@@ -5,14 +5,14 @@ sectionCourses = document.getElementById("adm-courses");
 sectionSheduls = document.getElementById("adm-sheduls");
 
 sectionTeachers.addEventListener("click", ()=>{
-    window.open("admin-teachers");
+    window.location.replace("admin-teachers");
 })
 sectionSubjects.addEventListener("click", ()=>{
-    window.open("admin-subjects");
+    window.location.replace("admin-subjects")
 })
 sectionCourses.addEventListener("click", ()=>{
-    window.open("admin-courses");
+    window.location.replace("admin-courses");
 })
 sectionSheduls.addEventListener("click", ()=>{
-    window.open("admin-sheduls");
+    window.location.replace("admin-sheduls");
 })
