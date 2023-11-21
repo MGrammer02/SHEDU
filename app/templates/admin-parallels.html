@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='admin-page.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/shedu-logo.ico') }}">
-    <title>Administración: Salutaciones</title>
+    <title>Administración: Paralelos</title>
 </head>
 <body>
     <header class="header flex-a-c">
@@ -32,30 +32,48 @@
         </div>
     </header>
     <main class="flex-column">
-        <h1>Administración de Salutaciones</h1>
-        {% if salutations %}
-            <button class="btn-add">Añadir Salutación</button>
-            <table>
-                <thead>
+        <h1>Administración de Materias</h1>
+        <button class="btn-add">Añadir Paralelos</button>
+        {% if parallels %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Paralelo o Especialidad</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                {% for parallel in parallels %}
                     <tr>
-                        <th>ID</th>
-                        <th>Salutacion</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for salutation in salutations %}
-                    <tr>
-                        <td>{{salutation.salutation_id}}</td>
-                        <td>{{salutation.salutation}}</td>                    
-                        <td><button id="{{salutation.salutation_id}}" class="btn-edit">Editar</button><button id="{{salutation.salutation_id}}" class="btn-delete">Eliminar</button></td>                 
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <h3 class="txt-c">"NO HAY DATOS"</h3>
-        {% endif %}   
+                        <td>{{parallel.parallel_id}}</td>
+                        <td>{{parallel.parallel}}</td>                                                               
+                        <td><button id="{{parallel.parallel_id}}" class="btn-edit" onclick="btnsEdit({{parallel.parallel_id}})">Editar</button><button id="{{parallel.parallel_id}}" class="btn-delete" onclick="deleteSubject({{parallel.parallel_id}})">Eliminar</button></td>                                    
+                    </tr>  
+                {% endfor %}  
+                    </tbody>
+                </table>              
+                {% else %}
+                <h3 class="txt-c">"NO HAY DATOS"</h3>
+        {% endif %}
+        <div class="modal-container closed flex-j-c">
+            <div class="modal">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M18 6l-12 12" />
+                    <path d="M6 6l12 12" />
+                </svg>
+                <h3 id="title_modal" class="txt-c"></h3>
+                <form id="add-info-form" class="flex-aj-c">
+                    <div class="flex-j-c flex-column">
+                        <label>Paralelo:</label>
+                        <input id="parallel" maxlength="25" name="parallel" required>
+                    </div>
+                    <input id="btn_modal" type="submit" value="">
+                </form>
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='scripts/admin-parallels.js') }}"></script>
     </main>
     <footer class="flex-aj-c flex-column">
         <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">

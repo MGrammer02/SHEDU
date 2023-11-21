@@ -77,7 +77,7 @@ section {
     scroll-snap-stop: always;
 	display: grid;
 	width: 85%;
-	height: calc(100vh - 7rem);
+	padding: 13rem 0 8rem;
 	grid-template-columns: repeat(2, 1fr);
 	place-items: center;
 	align-content: center;
@@ -88,7 +88,7 @@ section {
 }
 .section-div {
 	position: relative;
-	height: 22rem;
+	height: 21rem;
 	z-index: 2;
 	gap: 12rem;
 	border-radius: 1rem;
@@ -104,7 +104,7 @@ section {
 	height: inherit;
 }
 .section-img {
-	width: 27rem;
+	width: 26rem;
 	height: 85%;
 	object-fit: contain;
 	position: relative;

@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, jsonify, request
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db
 from app.forms import LoginForm
-from app.models import Paralels
+from app.models import Parallels
 from app.models import Salutation
 from app.models import Subjects
 from app.models import Teachers
@@ -19,7 +19,6 @@ from app.models import Users
 def index():
     return render_template('index.html')
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -30,7 +29,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             flash('Inicio de sesión exitoso!', 'success')
-            return redirect(url_for('index'))  # Cambia 'index' con la ruta a la que deseas redirigir después del inicio de sesión.
+            return redirect(url_for('home'))  # Cambia 'index' con la ruta a la que deseas redirigir después del inicio de sesión.
 
         flash('Usuario o contraseña incorrectos. Inténtalo de nuevo.', 'error')
     return render_template('login.html', form=form)
@@ -47,7 +46,10 @@ def addUser():
     db.session.add(new_user)
     db.session.commit()
     return redirect(url_for('index'))
-    
+
+#-----------
+#ADMIN ROUTES
+#-----------
 @app.route('/admin-teachers')
 @login_required
 def adminTeachers():
@@ -64,7 +66,13 @@ def adminSubjects():
 @login_required
 def adminCourses():
     courses = Courses.query.all()
-    return render_template('admin-courses.html', courses=courses)
+    return render_template('admin-courses.html', courses=courses, parallels=get_parallels(), teachers=get_teachers())
+
+@app.route('/admin-parallels')
+@login_required
+def adminParallels():
+    parallels = Parallels.query.all()
+    return render_template('admin-parallels.html', parallels=parallels)
 
 @app.route('/admin-sheduls')
 @login_required
@@ -72,11 +80,15 @@ def adminSheduls():
     sheduls = 'EMPTY FOR THE MOMENT :('
     return render_template('admin-sheduls.html', sheduls=sheduls)
 
-@app.route('/admin-salutation')
+@app.route('/admin-salutations')
 @login_required
 def adminSalutation():
     salutations = Salutation.query.all()
-    return render_template('admin-salutation.html', salutations=salutations)
+    return render_template('admin-salutations.html', salutations=salutations)
+
+#------------------
+#<-----ADMIN ROUTES
+#------------------
 
 @app.route('/getSalutations')
 @login_required
@@ -90,12 +102,25 @@ def get_salutations():
 def get_genders():
     if current_user.admin:
         return Genders.query.all()
+
+@app.route('/getParalles')
+@login_required
+def get_parallels():
+    if current_user.admin:
+        return Parallels.query.all()
     
-    
+@app.route('/getTeachers')
+@login_required
+def get_teachers():
+    if current_user.admin:
+        return Teachers.query.all()
+
+#-------------   
+#CRUD DOCENTES
+#-------------
 @app.route('/get_teacher/<int:teacher_id>')
 @login_required
 def get_teacher(teacher_id):
-    print(teacher_id)
     try:
         teacher = Teachers.query.get(teacher_id)
         if teacher:
@@ -167,6 +192,267 @@ def delete_teacher(teacher_id):
                 db.session.commit()
                 return jsonify({'message': 'Docente eliminado correctamente! :P'})
             else:
-                return jsonify({'error': 'Docente no encontrado'})
+                return jsonify({'error': 'Docente no encontrado :('})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+    
+#----------- 
+#CRUD CURSOS
+#-----------
+@app.route('/get_course/<int:course_id>')
+@login_required
+def get_course(course_id):
+    try:
+        course = Courses.query.get(course_id)
+        if course:
+            course_info = {
+                'course': course.course,
+                'contraction': course.contraction,
+                'parallel_id': course.parallel_id,
+                'tutor': course.teacher_id
+            }
+            return jsonify(course_info)
+        else:
+            return jsonify({'error': 'Curso no encontrado'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/add_course', methods=['POST'])
+@login_required
+def add_course():
+    if current_user.admin:
+        try:
+            course = request.form.get('course')
+            contraction = request.form.get('contraction')
+            parallel = request.form.get('parallel')
+            tutor = request.form.get('tutor')
+            
+            new_course = Courses(course=course, contraction=contraction, parallel_id=parallel, teacher_id=tutor)
+
+            # Agregar el curso a la base de datos
+            db.session.add(new_course)
+            db.session.commit()
+            return jsonify({'message': 'Curso agregado exitosamente! :D'})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+
+@app.route('/edit_course/<int:course_id>', methods=['PUT'])
+@login_required
+def edit_course(course_id):
+    if (current_user.admin):
+        try:
+            course = Courses.query.get(course_id)
+            course.course = request.form.get('course')
+            course.contraction = request.form.get('contraction')
+            course.parallel_id = request.form.get('parallel')
+            course.teacher_id = request.form.get('tutor')
+
+            # Actualizar info del curso a la base de datos
+            db.session.commit()
+            return jsonify({'message': 'Curso actualizado exitosamente! :D'})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        
+@app.route('/delete_course/<int:course_id>', methods=['DELETE'])
+@login_required
+def delete_course(course_id):
+    if(current_user.admin):
+        try:
+            course = Courses.query.get(course_id)
+            if course:
+                db.session.delete(course)
+                db.session.commit()
+                return jsonify({'message': 'Curso eliminado correctamente! :P'})
+            else:
+                return jsonify({'error': 'Curso no encontrado :('})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+
+#-------------   
+#CRUD MATERIAS
+#-------------
+@app.route('/get_subject/<int:subject_id>')
+@login_required
+def get_subject(subject_id):
+    print(subject_id)
+    try:
+        subject = Subjects.query.get(subject_id)
+        if subject:
+            subject_info = {
+                'subject': subject.subject
+            }
+            return jsonify(subject_info)
+        else:
+            return jsonify({'error': 'Materia no encontrada :('})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/add_subject', methods=['POST'])
+@login_required
+def add_subject():
+    if current_user.admin:
+        try:
+            subject = request.form.get('subject')
+            new_subject = Subjects(subject=subject)
+
+            # Agregar el profesor a la base de datos
+            db.session.add(new_subject)
+            db.session.commit()
+            return jsonify({'message': 'Materia agregada exitosamente! :D'})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+
+@app.route('/edit_subject/<int:subject_id>', methods=['PUT'])
+@login_required
+def edit_subject(subject_id):
+    if (current_user.admin):
+        try:
+            subject = Subjects.query.get(subject_id)
+            subject.subject = request.form.get('subject')
+            
+            # Actualizar info del profesor a la base de datos
+            db.session.commit()
+            return jsonify({'message': 'Docente actualizado exitosamente! :D'})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        
+@app.route('/delete_subject/<int:subject_id>', methods=['DELETE'])
+@login_required
+def delete_subject(subject_id):
+    if(current_user.admin):
+        try:
+            subject = Subjects.query.get(subject_id)
+            if subject:
+                db.session.delete(subject)
+                db.session.commit()
+                return jsonify({'message': 'Materia eliminada correctamente! :P'})
+            else:
+                return jsonify({'error': 'Materia no encontrada :('})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        
+#-----------------
+#CRUD SALUTACIONES
+#-----------------
+@app.route('/get_salutation/<int:salutation_id>')
+@login_required
+def get_salutation(salutation_id):
+    print(salutation_id)
+    try:
+        salutation = Salutation.query.get(salutation_id)
+        if salutation:
+            salutation_info = {
+                'salutation': salutation.salutation
+            }
+            return jsonify(salutation_info)
+        else:
+            return jsonify({'error': 'Salutación no encontrada :('})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/add_salutation', methods=['POST'])
+@login_required
+def add_salutation():
+    if current_user.admin:
+        try:
+            salutation = request.form.get('salutation')
+            new_salutation = Salutation(salutation=salutation)
+
+            # Agregar el profesor a la base de datos
+            db.session.add(new_salutation)
+            db.session.commit()
+            return jsonify({'message': 'Salutación agregada exitosamente! :D'})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+
+@app.route('/edit_salutation/<int:salutation_id>', methods=['PUT'])
+@login_required
+def edit_salutation(salutation_id):
+    if (current_user.admin):
+        try:
+            salutation = Salutation.query.get(salutation_id)
+            salutation.salutation = request.form.get('salutation')
+            
+            # Actualizar info del profesor a la base de datos
+            db.session.commit()
+            return jsonify({'message': 'Salutación actualizado exitosamente! :D'})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        
+@app.route('/delete_salutation/<int:salutation_id>', methods=['DELETE'])
+@login_required
+def delete_salutation(salutation_id):
+    if(current_user.admin):
+        try:
+            salutation = Salutation.query.get(salutation_id)
+            if salutation:
+                db.session.delete(salutation)
+                db.session.commit()
+                return jsonify({'message': 'Salutación eliminada correctamente! :P'})
+            else:
+                return jsonify({'error': 'Salutación no encontrada :('})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+
+#--------------   
+#CRUD PARALELOS
+#--------------
+@app.route('/get_parallel/<int:parallel_id>')
+@login_required
+def get_parallel(parallel_id):
+    print(parallel_id)
+    try:
+        parallel = Parallels.query.get(parallel_id)
+        if parallel:
+            parallel_info = {
+                'parallel': parallel.parallel
+            }
+            return jsonify(parallel_info)
+        else:
+            return jsonify({'error': 'Paralelo no encontrada :('})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/add_parallel', methods=['POST'])
+@login_required
+def add_parallel():
+    if current_user.admin:
+        try:
+            parallel = request.form.get('parallel')
+            new_parallel = Parallels(parallel=parallel)
+
+            # Agregar el profesor a la base de datos
+            db.session.add(new_parallel)
+            db.session.commit()
+            return jsonify({'message': 'Paralelo agregado exitosamente! :D'})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+
+@app.route('/edit_parallel/<int:parallel_id>', methods=['PUT'])
+@login_required
+def edit_parallel(parallel_id):
+    if (current_user.admin):
+        try:
+            parallel = Parallels.query.get(parallel_id)
+            parallel.parallel = request.form.get('parallel')
+            
+            # Actualizar info del profesor a la base de datos
+            db.session.commit()
+            return jsonify({'message': 'Paralelo actualizado exitosamente! :D'})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        
+@app.route('/delete_parallel/<int:parallel_id>', methods=['DELETE'])
+@login_required
+def delete_parallel(parallel_id):
+    if(current_user.admin):
+        try:
+            parallel = Parallels.query.get(parallel_id)
+            if parallel:
+                db.session.delete(parallel)
+                db.session.commit()
+                return jsonify({'message': 'Paralelo eliminado correctamente! :P'})
+            else:
+                return jsonify({'error': 'Paralelo no encontrado :('})
         except Exception as e:
             return jsonify({'error': str(e)})

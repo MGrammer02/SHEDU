@@ -15,7 +15,6 @@ html {
 	user-select: none;
 	/* font-family: 'Nunito', sans-serif; */
 	scroll-snap-type: y mandatory;
-	scroll-padding-top: 8rem;
 	box-sizing: border-box;	
 }
 *, *:before, *:after {
@@ -109,8 +108,9 @@ h5 {
 	color: var(--color-claro);
 	text-transform: uppercase;
 	padding: 0 3rem;
-	scroll-snap-align: end;
+	scroll-snap-align: start;
 	scroll-snap-stop: always;
+	scroll-padding-top: 0;
 }
 .section-separation h3 {
 	font-size: 8.5rem;
@@ -150,10 +150,10 @@ h5 {
 	margin-left: 1.5rem;
 }
 .menu-icon img {
-	height: 5.4rem;
+	height: 4.5rem;
 	border-radius: 50%;
 	object-fit: cover;
-	width: 5.4rem;
+	width: 4.5rem;
 	cursor: pointer;
 }
 
@@ -162,7 +162,7 @@ main {
 	scroll-snap-align: start;
 	scroll-snap-stop: always;
 	min-height: 100vh;
-	padding: 12rem 10rem 4rem;
+	padding: 8rem 10rem 4rem;
 }
 
 /*FOOTER*/

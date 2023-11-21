@@ -15,7 +15,7 @@
 <body>
     <header class="header flex-a-c">
         <div class="logo-container">
-            <a href="/"><img class="img-logo" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="shedul logo"></a>
+            <a href="/home"><img class="img-logo" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="shedul logo"></a>
         </div>
         <nav class="navegador flex-a-c h-100">
             <a class="link" href="#">Horarios</a>
@@ -65,6 +65,16 @@
                 </div>
             </div>
         </div>
+        <div id="adm-salutations" class="section a-c">
+            <div class="section-div flex-aj-c">
+                <div class="section-container-img flex-aj-c">
+                    <img class="section-img" src="{{ url_for('static', filename='images/admin-salutations.png') }}" alt="Administrar Salutaciones">
+                </div>
+                <div class="section-info-container">
+                    <p>Administrar Salutaciones</p>
+                </div>
+            </div>
+        </div>
         <div id="adm-subjects" class="section a-c">
             <div class="section-div flex-aj-c">
                 <div class="section-container-img flex-aj-c">
@@ -85,13 +95,33 @@
                 </div>
             </div>
         </div>
+        <div id="adm-parallels" class="section a-c">
+            <div class="section-div flex-aj-c">
+                <div class="section-container-img flex-aj-c">
+                    <img class="section-img" src="{{ url_for('static', filename='images/admin-parallels.png') }}" alt="Administrar Paralelos">
+                </div>
+                <div class="section-info-container">
+                    <p>Administrar Paralelos</p>
+                </div>
+            </div>
+        </div>
         <div id="adm-sheduls" class="section a-c">
             <div class="section-div flex-aj-c">
                 <div class="section-container-img flex-aj-c">
-                    <img class="section-img" src="{{ url_for('static', filename='images/admin-horarios.png') }}" alt="Administrar personal">
+                    <img class="section-img" src="{{ url_for('static', filename='images/admin-horarios.png') }}" alt="Administrar Horarios">
                 </div>
                 <div class="section-info-container">
                     <p>Administrar Horarios</p>
+                </div>
+            </div>
+        </div>
+        <div id="adm-users" class="section a-c">
+            <div class="section-div flex-aj-c">
+                <div class="section-container-img flex-aj-c">
+                    <img class="section-img" src="{{ url_for('static', filename='images/admin-users.png') }}" alt="Administrar Usuarios">
+                </div>
+                <div class="section-info-container">
+                    <p>Administrar Usuarios</p>
                 </div>
             </div>
         </div>

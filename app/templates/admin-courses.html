@@ -33,34 +33,26 @@
     </header>
     <main class="flex-column">
         <h1>Administración de Cursos</h1>
-        {% if courses %}
         <button class="btn-add">Añadir Curso</button>
+        {% if courses %}
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Salutación</th>
-                    <th>Primer Nombre</th>
-                    <th>Segundo Nombre</th>
-                    <th>Primer Apellido</th>
-                    <th>Segundo Apellido</th>
-                    <th>Sexo</th>
-                    <th>Horas Laborales</th>
-                    <th>Acción</th>
+                    <th>Curso</th>
+                    <th>Paralelo</th>
+                    <th>Tutor</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
         {% for course in courses %}
             <tr>
-                <td>{{course.teacher_id}}</td>
-                <td>{{course.salutation.salutation}}</td>
-                <td>{{course.first_name}}</td>                    
-                <td>{{course.second_name}}</td>
-                <td>{{course.first_lastname}}</td>                    
-                <td>{{course.second_lastname}}</td>      
-                <td>{{course.gender.gender}}</td>                
-                <td>{{course.work_hours}}</td>                                                                                         
-                <td><button id="{{course.course_id}}" class="btn-edit">Editar</button><button id="{{course.course_id}}" class="btn-delete">Eliminar</button></td>                                    
+                <td>{{course.course_id}}</td>
+                <td>{{course.course}}</td>
+                <td>{{course.parallel.parallel}}</td>                                 
+                <td>{{course.tutor.first_name + ' ' + course.tutor.first_lastname}}</td>                                                                                         
+                <td><button id="{{course.course_id}}" class="btn-edit" onclick="btnsEdit({{course.course_id}})">Editar</button><button id="{{course.course_id}}" class="btn-delete" onclick="deleteCourse({{course.course_id}})">Eliminar</button></td>                                    
             </tr>  
         {% endfor %}
             </tbody>
@@ -68,10 +60,50 @@
         {% else %}
             <h3 class="txt-c">"NO HAY DATOS"</h3>
         {% endif %}
+        <div class="modal-container closed flex-j-c">
+            <div class="modal">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M18 6l-12 12" />
+                    <path d="M6 6l12 12" />
+                </svg>
+                <h3 id="title_modal" class="txt-c"></h3>
+                <form id="add-info-form" class="flex-aj-c">
+                    <div class="flex-j-c flex-column">
+                        <label>Curso:</label>
+                        <input id="course" maxlength="25" name="course" required>
+                    </div>
+                    <div class="flex-j-c flex-column">
+                        <label>Contracción:</label>
+                        <input id="contraction" maxlength="15" name="contraction" required>
+                    </div>
+                    <div class="flex-j-c flex-column">
+                        <label class="label">Paralelo</label>
+                        <select id="parallel" name="parallel" required>
+                            <option disabled selected hidden></option>
+                            {% for parallel in parallels %}
+                                <option value="{{parallel.parallel_id}}">{{parallel.parallel}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="flex-j-c flex-column">
+                        <label class="label">Tutor</label>
+                        <select id="tutor" name="tutor" required>
+                            <option disabled selected hidden></option>
+                            {% for teacher in teachers %}
+                                <option value="{{teacher.teacher_id}}">{{teacher.salutation.salutation + ' ' + teacher.first_name + ' ' + teacher.first_lastname}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input id="btn_modal" type="submit" value="">
+                </form>
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='scripts/admin-courses.js') }}"></script>
     </main>
     <footer class="flex-aj-c flex-column">
         <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">
-        <div class="footer-sections flex-aj-c">
+        <div class="footer-sections flex-a-c">
             <div class="footer-sections-container">
                 <div class="w-100">
                     <h5>Vision</h5>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='admin-page.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/shedu-logo.ico') }}">
-    <title>Administración: Docentes</title>
+    <title>Administración: Salutaciones</title>
 </head>
 <body>
     <header class="header flex-a-c">
@@ -32,42 +32,30 @@
         </div>
     </header>
     <main class="flex-column">
-        <h1>Administración de Docentes</h1>
-        <button class="btn-add">Añadir Docente</button>
-        {% if teachers%}
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Salutación</th>
-                    <th>Primer Nombre</th>
-                    <th>Segundo Nombre</th>
-                    <th>Primer Apellido</th>
-                    <th>Segundo Apellido</th>
-                    <th>Sexo</th>
-                    <th>Horas Laborales</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for teacher in teachers %}
-                <tr>
-                    <td>{{teacher.teacher_id}}</td>
-                    <td>{{teacher.salutation.salutation}}</td>
-                    <td>{{teacher.first_name}}</td>                    
-                    <td>{{teacher.second_name}}</td>
-                    <td>{{teacher.first_lastname}}</td>                    
-                    <td>{{teacher.second_lastname}}</td>      
-                    <td>{{teacher.gender.gender}}</td>                
-                    <td>{{teacher.work_hours}}</td>                                                                     
-                    <td><button id="{{teacher.teacher_id}}" class="btn-edit" onclick="btnsEdit({{teacher.teacher_id}})">Editar</button><button id="{{teacher.teacher_id}}" class="btn-delete" onclick="deleteTeacher({{teacher.teacher_id}})">Eliminar</button></td>                                    
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <h1>Administración de Salutaciones</h1>
+        {% if salutations %}
+            <button class="btn-add">Añadir Salutación</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Salutacion</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for salutation in salutations %}
+                    <tr>
+                        <td>{{salutation.salutation_id}}</td>
+                        <td>{{salutation.salutation}}</td>                    
+                        <td><button id="{{salutation.salutation_id}}" class="btn-edit" onclick="btnsEdit({{salutation.salutation_id}})">Editar</button><button id="{{salutation.salutation_id}}" class="btn-delete" onclick="deleteSalutation({{salutation.salutation_id}})">Eliminar</button></td>                 
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% else %}
             <h3 class="txt-c">"NO HAY DATOS"</h3>
-        {% endif %}
+        {% endif %}   
         <div class="modal-container closed flex-j-c">
             <div class="modal">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -78,48 +66,14 @@
                 <h3 id="title_modal" class="txt-c"></h3>
                 <form id="add-info-form" class="flex-aj-c">
                     <div class="flex-j-c flex-column">
-                        <label>Primer Nombre</label>
-                        <input id="firstName" maxlength="25" name="firstName" required>
-                    </div>
-                    <div class="flex-j-c flex-column">
-                        <label>Segundo Nombre</label>
-                        <input id="secondName" maxlength="25" name="secondName" required>
-                    </div>
-                    <div class="flex-j-c flex-column">
-                        <label>Primer Apellido</label>
-                        <input id="firstLastName" maxlength="25" name="firstLastName" required>
-                    </div>
-                    <div class="flex-j-c flex-column">
-                        <label>Segundo Apellido</label>
-                        <input id="secondLastName" maxlength="25" name="secondLastName" required>
-                    </div>
-                    <div class="flex-j-c flex-column">
-                        <label>Salutación</label>
-                        <select id="salutation" name="salutation" required>
-                            <option disabled selected hidden></option>
-                            {% for salutation in salutations %}
-                                <option value="{{salutation.salutation_id}}">{{salutation.salutation}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="flex-j-c flex-column">
-                        <label class="label">Género</label>
-                        <select id="gender" name="gender" required>
-                            <option disabled selected hidden></option>
-                            {% for gender in genders %}
-                                <option value="{{gender.gender_id}}">{{gender.gender}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="flex-j-c flex-column">
-                        <label>Horas laborales</label>
-                        <input id="hours" type="number" maxlength="2" name="hours" value="8" required>
+                        <label>Salutación:</label>
+                        <input id="salutation" maxlength="25" name="salutation" required>
                     </div>
                     <input id="btn_modal" type="submit" value="">
                 </form>
             </div>
         </div>
-    <script src="{{ url_for('static', filename='scripts/admin-teachers.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/admin-salutations.js') }}"></script>
     </main>
     <footer class="flex-aj-c flex-column">
         <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">

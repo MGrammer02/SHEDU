@@ -4,10 +4,10 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
     
 
-# Modelo para la tabla `paralels`
-class Paralels(db.Model):
-    paralel_id = db.Column(db.Integer, primary_key=True)
-    paralel = db.Column(db.String(50), nullable=False)
+# Modelo para la tabla `parallels`
+class Parallels(db.Model):
+    parallel_id = db.Column(db.Integer, primary_key=True)
+    parallel = db.Column(db.String(50), nullable=False)
 
 # Modelo para la tabla `genders`
 class Genders(db.Model):
@@ -36,7 +36,7 @@ class Teachers(db.Model):
 # Modelo para la tabla `subjects`
 class Subjects(db.Model):
     subject_id = db.Column(db.Integer, primary_key=True)
-    subject = db.Column(db.String(11), nullable=False)
+    subject = db.Column(db.String(25), nullable=False)
     
 class SubjectTeacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,8 +47,12 @@ class SubjectTeacher(db.Model):
 class Courses(db.Model):
     course_id = db.Column(db.Integer, primary_key=True)
     course = db.Column(db.String(50), nullable=False)
-    paralel_id = db.Column(db.Integer, db.ForeignKey('paralels.paralel_id'), nullable=False)
+    contraction = db.Column(db.String(15), nullable=False)
+    parallel_id = db.Column(db.Integer, db.ForeignKey('parallels.parallel_id'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'), nullable=False)
+    
+    parallel = db.relationship('Parallels', backref='courses', lazy=True)
+    tutor = db.relationship('Teachers', backref='courses', lazy=True)
 
 # Modelo para la tabla `course_teacher`
 class CourseTeacher(db.Model):
@@ -76,7 +80,7 @@ class Users(db.Model, UserMixin):
     user = db.Column(db.String(15), unique=True, nullable=False)
     password = db.Column(db.LargeBinary, nullable=False)
     admin = db.Column(db.Boolean, default=False, nullable=False)
-    teacher = db.relationship('Teachers', backref='user', lazy=True)
+    teacher = db.relationship('Teachers', backref='users', lazy=True)
     
     def create_password(password):
         return generate_password_hash(password).encode('utf-8')
