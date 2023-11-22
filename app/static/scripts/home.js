@@ -28,3 +28,6 @@ sectionUsers.addEventListener("click", ()=>{
 sectionSalutations.addEventListener("click", ()=>{
     window.location.href = "admin-salutations";
 });
+sectionUsers.addEventListener("click", ()=>{
+    window.location.href = "admin-users";
+});

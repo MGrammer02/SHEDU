@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='admin-page.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/shedu-logo.ico') }}">
     <title>Administración: Paralelos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700;800&family=Nunito:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="header flex-a-c">
@@ -48,7 +51,7 @@
                     <tr>
                         <td>{{parallel.parallel_id}}</td>
                         <td>{{parallel.parallel}}</td>                                                               
-                        <td><button id="{{parallel.parallel_id}}" class="btn-edit" onclick="btnsEdit({{parallel.parallel_id}})">Editar</button><button id="{{parallel.parallel_id}}" class="btn-delete" onclick="deleteSubject({{parallel.parallel_id}})">Eliminar</button></td>                                    
+                        <td><button id="{{parallel.parallel_id}}" class="btn-edit" onclick="btnsEdit({{parallel.parallel_id}})">Editar</button><button id="{{parallel.parallel_id}}" class="btn-delete" onclick="deleteParallel({{parallel.parallel_id}})">Eliminar</button></td>                                    
                     </tr>  
                 {% endfor %}  
                     </tbody>

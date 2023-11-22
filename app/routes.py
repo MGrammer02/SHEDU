@@ -29,7 +29,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             flash('Inicio de sesión exitoso!', 'success')
-            return redirect(url_for('home'))  # Cambia 'index' con la ruta a la que deseas redirigir después del inicio de sesión.
+            return redirect(url_for('index'))  # Cambia 'index' con la ruta a la que deseas redirigir después del inicio de sesión.
 
         flash('Usuario o contraseña incorrectos. Inténtalo de nuevo.', 'error')
     return render_template('login.html', form=form)
@@ -53,25 +53,25 @@ def addUser():
 @app.route('/admin-teachers')
 @login_required
 def adminTeachers():
-    teachers = Teachers.query.all()
+    teachers = Teachers.query.order_by(Teachers.first_name, Teachers.first_lastname).all()
     return render_template('admin-teachers.html', teachers=teachers, salutations=get_salutations(), genders=get_genders())
 
 @app.route('/admin-subjects')
 @login_required
 def adminSubjects():
-    subjects = Subjects.query.all()
+    subjects = Subjects.query.order_by(Subjects.subject).all()
     return render_template('admin-subjects.html', subjects=subjects)
 
 @app.route('/admin-courses')
 @login_required
 def adminCourses():
-    courses = Courses.query.all()
+    courses = Courses.query.order_by(Courses.course).all()
     return render_template('admin-courses.html', courses=courses, parallels=get_parallels(), teachers=get_teachers())
 
 @app.route('/admin-parallels')
 @login_required
 def adminParallels():
-    parallels = Parallels.query.all()
+    parallels = Parallels.query.order_by(Parallels.parallel).all()
     return render_template('admin-parallels.html', parallels=parallels)
 
 @app.route('/admin-sheduls')
@@ -83,8 +83,15 @@ def adminSheduls():
 @app.route('/admin-salutations')
 @login_required
 def adminSalutation():
-    salutations = Salutation.query.all()
+    salutations = Salutation.query.order_by(Salutation.salutation).all()
     return render_template('admin-salutations.html', salutations=salutations)
+
+@app.route('/admin-users')
+@login_required
+def adminUsers():
+    users = Users.query.all()
+    teachers = Teachers.query.order_by(Teachers.first_name, Teachers.first_lastname).all()
+    return render_template('admin-users.html', users=users, teachers=teachers)
 
 #------------------
 #<-----ADMIN ROUTES
@@ -113,7 +120,7 @@ def get_parallels():
 @login_required
 def get_teachers():
     if current_user.admin:
-        return Teachers.query.all()
+        return Teachers.query.order_by(Teachers.first_name, Teachers.first_lastname).all()
 
 #-------------   
 #CRUD DOCENTES
@@ -135,7 +142,7 @@ def get_teacher(teacher_id):
             }
             return jsonify(teacher_info)
         else:
-            return jsonify({'error': 'Profesor no encontrado'})
+            raise Exception({'error': 'Profesor no encontrado'})
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -192,7 +199,7 @@ def delete_teacher(teacher_id):
                 db.session.commit()
                 return jsonify({'message': 'Docente eliminado correctamente! :P'})
             else:
-                return jsonify({'error': 'Docente no encontrado :('})
+                raise Exception({'error': 'Docente no encontrado :('})
         except Exception as e:
             return jsonify({'error': str(e)})
     
@@ -213,7 +220,7 @@ def get_course(course_id):
             }
             return jsonify(course_info)
         else:
-            return jsonify({'error': 'Curso no encontrado'})
+            raise Exception({'error': 'Curso no encontrado'})
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -264,7 +271,7 @@ def delete_course(course_id):
                 db.session.commit()
                 return jsonify({'message': 'Curso eliminado correctamente! :P'})
             else:
-                return jsonify({'error': 'Curso no encontrado :('})
+                raise Exception({'error': 'Curso no encontrado :('})
         except Exception as e:
             return jsonify({'error': str(e)})
 
@@ -283,7 +290,7 @@ def get_subject(subject_id):
             }
             return jsonify(subject_info)
         else:
-            return jsonify({'error': 'Materia no encontrada :('})
+            raise Exception({'error': 'Materia no encontrada :('})
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -327,7 +334,7 @@ def delete_subject(subject_id):
                 db.session.commit()
                 return jsonify({'message': 'Materia eliminada correctamente! :P'})
             else:
-                return jsonify({'error': 'Materia no encontrada :('})
+                raise Exception({'error': 'Materia no encontrada :('})
         except Exception as e:
             return jsonify({'error': str(e)})
         
@@ -346,7 +353,7 @@ def get_salutation(salutation_id):
             }
             return jsonify(salutation_info)
         else:
-            return jsonify({'error': 'Salutación no encontrada :('})
+            raise Exception({'error': 'Salutación no encontrada :('})
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -390,7 +397,7 @@ def delete_salutation(salutation_id):
                 db.session.commit()
                 return jsonify({'message': 'Salutación eliminada correctamente! :P'})
             else:
-                return jsonify({'error': 'Salutación no encontrada :('})
+                raise Exception({'error': 'Salutación no encontrada :('})
         except Exception as e:
             return jsonify({'error': str(e)})
 
@@ -400,7 +407,6 @@ def delete_salutation(salutation_id):
 @app.route('/get_parallel/<int:parallel_id>')
 @login_required
 def get_parallel(parallel_id):
-    print(parallel_id)
     try:
         parallel = Parallels.query.get(parallel_id)
         if parallel:
@@ -409,7 +415,7 @@ def get_parallel(parallel_id):
             }
             return jsonify(parallel_info)
         else:
-            return jsonify({'error': 'Paralelo no encontrada :('})
+            raise Exception({'error': 'Paralelo no encontrado :('})
     except Exception as e:
         return jsonify({'error': str(e)})
     
@@ -453,6 +459,90 @@ def delete_parallel(parallel_id):
                 db.session.commit()
                 return jsonify({'message': 'Paralelo eliminado correctamente! :P'})
             else:
-                return jsonify({'error': 'Paralelo no encontrado :('})
+                raise Exception({'error': 'Paralelo no encontrado :('})
         except Exception as e:
             return jsonify({'error': str(e)})
+        
+
+#-------------   
+#CRUD USUARIOS
+#-------------
+@app.route('/get_user/<int:user_id>')
+@login_required
+def get_user(user_id):
+    try:
+        user = Users.query.get(user_id)
+        print(user)
+        if user:
+            user_info = {
+                'teacher_id': user.teacher_id,
+                'user': user.user,
+                'password': "",
+                'admin': user.admin
+            }
+            return jsonify(user_info)
+        else:
+            raise Exception(jsonify({'error': 'Usuario no encontrado :('}))
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/add_user', methods=['POST'])
+@login_required
+def add_user():
+    if current_user.admin:
+        try:
+            user = request.form.get('user')
+            if Users.user_exists(user):
+                raise Exception("userexists")
+            teacher = request.form.get('teacher')
+            password = request.form.get('password')
+            
+            if request.form.get('admin') == 'on': admin = True
+            else: admin = False
+            
+            new_user = Users(teacher_id=teacher, user=user, password=Users.create_password(password), admin=admin)
+
+            # Agregar el profesor a la base de datos
+            db.session.add(new_user)
+            db.session.commit()
+            return jsonify({'message': 'Usuario agregado exitosamente! :D'})
+        except Exception as e:
+            print(e)
+            return jsonify({'error': str(e)})
+
+@app.route('/edit_user/<int:user_id>', methods=['PUT'])
+@login_required
+def edit_user(user_id):
+    if (current_user.admin):
+        try:
+            user = Users.query.get(user_id)
+            pwd_hashed = Users.create_password(request.form.get('password'))
+            user.teacher_id = request.form.get('teacher')
+            user.user = request.form.get('user')
+            user.password = pwd_hashed
+            
+            if request.form.get('admin') == 'on': user.admin = True
+            else: user.admin = False
+            
+            # Actualizar info del usuario a la base de datos
+            db.session.commit()
+            return jsonify({'message': 'Usuario actualizado exitosamente! :D'})
+        except Exception as e:
+            
+            return jsonify({'error': str(e)})
+        
+@app.route('/delete_user/<int:user_id>', methods=['DELETE'])
+@login_required
+def delete_user(user_id):
+    if(current_user.admin):
+        try:
+            user = Users.query.get(user_id)
+            if user:
+                db.session.delete(user)
+                db.session.commit()
+                return jsonify({'message': 'Usuario eliminado correctamente! :P'})
+            else:
+                return jsonify({'error': 'Usuario no encontrado :('})
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        

@@ -85,7 +85,7 @@ btnUpload.addEventListener("click", (e)=>{
 })
 
 deleteParallel = (id_parallel) => {
-    if (!confirm("¿Está seguro que sea eliminar esta materia?")) {
+    if (!confirm("¿Está seguro que sea eliminar este paralelo?")) {
         return;
     }
     fetch(`/delete_parallel/${id_parallel}`, {

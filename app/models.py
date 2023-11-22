@@ -91,5 +91,11 @@ class Users(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password.decode('utf-8'), password)
     
+    def user_exists(username):
+        # Consulta para verificar si el usuario existe
+        existing_user = Users.query.filter_by(user=username).first()
+        # Si existing_user no es None, significa que el usuario ya existe
+        return existing_user is not None
+    
     def get_id(self):
         return str(self.teacher_id)  # Convierte el ID a cadena si no lo es

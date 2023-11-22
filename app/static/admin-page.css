@@ -10,7 +10,7 @@ button {
 }
 .btn-add {
     width: 20rem;
-    padding: 1rem 2rem;
+    padding: 1.3rem 3rem;
     background-color: rgb(5, 161, 16);
     color: #fff;
     font-weight: bold;
@@ -18,6 +18,7 @@ button {
     align-self: flex-end;
     margin-bottom: 0.5rem;
     cursor: pointer;
+    font-size: 1.6rem;
 }
 .btn-add:hover {
     background-color: rgb(8, 150, 17);
@@ -67,6 +68,7 @@ tbody tr:hover {
 }
 main {
     position: relative;
+    font-family: 'Nunito', sans-serif;
 }
 .modal-container {
     position: absolute;
@@ -84,7 +86,7 @@ main {
     position: relative;
     width: 55rem;
     height: max-content;
-    margin-top: 6rem;
+    margin-top: 8rem;
     background-color: #fff;
     padding: 2rem 4rem 4rem;
     border-radius: 2.5rem;
@@ -152,9 +154,45 @@ form input[type="submit"]:active {
     position: relative;
     top: 0.1rem;
 }
+select {
+    overflow: auto;
+    max-height: 10rem;
+}
 label {
     font-size: 1.2rem;
     text-align: start;
     color: #555;
     margin-bottom: 0.5rem;
+}
+.label-checkbox {
+    font-size: 1.4rem;
+    text-align: center;
+    color: #555;
+    padding: 0;
+}
+.input-checkbox {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    margin-left: 1.5rem;
+}
+.btn-show-pwd {
+    font-size: 1.3rem;
+    width: 19rem;
+    padding: .8rem 1rem;
+    color: #fff;
+    font-weight: bold;
+    background-color: rgb(196, 0, 199);
+    border-radius: 1rem 0 0 1rem;
+    cursor: pointer;
+}
+.btn-show-pwd svg {
+    margin-left: 1rem;
+}
+.btn-show-pwd:hover {
+    background-color: rgb(183, 3, 186);
+}
+.btn-show-pwd:active {
+    position: relative;
+    bottom: .1rem;
 }

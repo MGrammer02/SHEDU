@@ -7,18 +7,8 @@ openModal = (edit, courseId) => {
         .then(data => {
             document.getElementById("course").value = data.course;
             document.getElementById("contraction").value = data.contraction;
-            for(op of document.getElementById("parallel").options) {
-                if (op.value == data.parallel_id) {
-                    op.setAttribute("selected", "");
-                    break;
-                }
-            }
-            for(op of document.getElementById("tutor").options) {
-                if (op.value == data.tutor) {
-                    op.setAttribute("selected", "");
-                    break;
-                }
-            }
+            document.getElementById("parallel").value = data.parallel_id;
+            document.getElementById("tutor").value = data.tutor;
         })
         .catch(error => {
             closeModal();

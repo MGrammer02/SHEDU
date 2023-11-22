@@ -10,18 +10,8 @@ openModal = (edit, teacherId) => {
             document.getElementById("firstLastName").value = data.first_lastname;
             document.getElementById("secondLastName").value = data.second_lastname;
             document.getElementById("hours").value = data.work_hours;
-            for(op of document.getElementById("gender").options) {
-                if (op.value == data.gender_id) {
-                    op.setAttribute("selected", "");
-                    break;
-                }
-            }
-            for(op of document.getElementById("salutation").options) {
-                if (op.value == data.salutation_id) {
-                    op.setAttribute("selected", "");
-                    break;
-                }
-            }
+            document.getElementById("gender").value = data.gender_id;
+            document.getElementById("salutation").value = data.salutation_id;
         })
         .catch(error => {
             closeModal();

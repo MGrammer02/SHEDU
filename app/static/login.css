@@ -1,6 +1,6 @@
 body {
     height: 100vh;
-    background: linear-gradient(90deg, rgb(91, 6, 236) 0%, rgb(54, 4, 148) 76%);
+    background: linear-gradient(110deg, rgb(77, 1, 128) 0%, rgb(10, 42, 116)50%, rgb(77, 1, 128) 85%);
     z-index: 0;
 }
 body::after {
@@ -8,7 +8,7 @@ body::after {
     content: "";
     top: 0; bottom: 0;
     right: 0; left: 0;
-    background-color: rgba(0, 0, 0, 0.433);
+    background-color: rgba(0, 0, 0, 0.352);
 }
 img {
     z-index: 10;
