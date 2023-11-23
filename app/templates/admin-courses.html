@@ -65,47 +65,47 @@
         {% else %}
             <h3 class="txt-c">"NO HAY DATOS"</h3>
         {% endif %}
-        <div class="modal-container closed flex-j-c">
-            <div class="modal">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M18 6l-12 12" />
-                    <path d="M6 6l12 12" />
-                </svg>
-                <h3 id="title_modal" class="txt-c"></h3>
-                <form id="add-info-form" class="flex-aj-c">
-                    <div class="flex-j-c flex-column">
-                        <label>Curso:</label>
-                        <input id="course" maxlength="25" name="course" required>
-                    </div>
-                    <div class="flex-j-c flex-column">
-                        <label>Contracción:</label>
-                        <input id="contraction" maxlength="15" name="contraction" required>
-                    </div>
-                    <div class="flex-j-c flex-column">
-                        <label class="label">Paralelo</label>
-                        <select id="parallel" name="parallel" required>
-                            <option disabled selected hidden></option>
-                            {% for parallel in parallels %}
-                                <option value="{{parallel.parallel_id}}">{{parallel.parallel}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="flex-j-c flex-column">
-                        <label class="label">Tutor</label>
-                        <select id="tutor" name="tutor" required>
-                            <option disabled selected hidden></option>
-                            {% for teacher in teachers %}
-                                <option value="{{teacher.teacher_id}}">{{teacher.salutation.salutation + ' ' + teacher.first_name + ' ' + teacher.first_lastname}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <input id="btn_modal" type="submit" value="">
-                </form>
-            </div>
-        </div>
-        <script src="{{ url_for('static', filename='scripts/admin-courses.js') }}"></script>
     </main>
+    <div class="modal-container closed flex-j-c">
+        <div class="modal">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+            </svg>
+            <h3 id="title_modal" class="txt-c"></h3>
+            <form id="add-info-form" class="flex-aj-c">
+                <div class="flex-j-c flex-column">
+                    <label>Curso:</label>
+                    <input id="course" maxlength="25" name="course" required>
+                </div>
+                <div class="flex-j-c flex-column">
+                    <label>Contracción:</label>
+                    <input id="contraction" maxlength="15" name="contraction" required>
+                </div>
+                <div class="flex-j-c flex-column">
+                    <label class="label">Paralelo</label>
+                    <select id="parallel" name="parallel" required>
+                        <option disabled selected hidden></option>
+                        {% for parallel in parallels %}
+                            <option value="{{parallel.parallel_id}}">{{parallel.parallel}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex-j-c flex-column">
+                    <label class="label">Tutor</label>
+                    <select id="tutor" name="tutor" required>
+                        <option disabled selected hidden></option>
+                        {% for teacher in teachers %}
+                            <option value="{{teacher.teacher_id}}">{{teacher.salutation.salutation + ' ' + teacher.first_name + ' ' + teacher.first_lastname}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input id="btn_modal" type="submit" value="">
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='scripts/admin-courses.js') }}"></script>
     <footer class="flex-aj-c flex-column">
         <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">
         <div class="footer-sections flex-a-c">
