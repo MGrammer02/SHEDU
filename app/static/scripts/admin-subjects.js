@@ -1,6 +1,6 @@
 
 let action = 'upload';
-openModal = (edit, subjectId) => {
+openModal = (modal, edit, subjectId) => {
     if (edit) {
         fetch(`/get_subject/${subjectId}`)
         .then(response => response.json())
@@ -8,18 +8,18 @@ openModal = (edit, subjectId) => {
             document.getElementById("subject").value = data.subject;
         })
         .catch(error => {
-            closeModal();
+            closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
             alert(error['error'])
         });
     }
-    document.querySelector(".modal-container").classList.remove("closed");
+    modal.classList.remove("closed");
 }
-closeModal = () => {
-    document.querySelector(".modal-container").classList.add("closed");
-    document.querySelector("#add-info-form").reset();
+closeModal = (modal, form) => {
+    modal.classList.add("closed");
+    form.reset();
 }
-validateForm = () => {
-    let inputs = document.querySelectorAll("input");
+validateForm = (formToValidate) => {
+    let inputs = formToValidate.querySelectorAll("input");
     for(input of inputs) {
         if (input.value == '') {
             input.style.outline = "0.2rem solid #c00";
@@ -34,22 +34,42 @@ document.querySelector(".btn-add").addEventListener("click", (e)=> {
     document.getElementById("title_modal").innerHTML = "Agregar Materia";
     document.getElementById("btn_modal").value = "Subir información"
     action = 'upload';
-    openModal();
-})
+    openModal(document.querySelector(".modal-container"));
+});
+
+asignCourses = (id)=> {
+    fetch(`/get_subject/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("title_modal-asign").innerHTML =  data.subject + ` | Asignar Cursos:`;
+            document.getElementById("btn_modal-asign").value = "Guardar"
+            action = 'asign';
+            openModal(document.querySelector(".modal-asign-container"));
+        })
+        .catch(error => {
+            closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
+            alert(error['error'])
+        });
+};
+
 btnsEdit = (id)=> {
     document.getElementById("title_modal").innerHTML = "Actualizar Materia";
     document.getElementById("btn_modal").value = "Actualizar"
     action = id;
-    openModal(true, id);
+    openModal(document.querySelector(".modal-container"), true, id);
 }
+
 document.querySelector(".icon-tabler-x").addEventListener("click", ()=>{
-    closeModal();
-})
+    closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
+});
+document.querySelector(".icon-tabler-x-asign").addEventListener("click", ()=>{
+    closeModal(document.querySelector(".modal-asign-container"), document.getElementById("asign-info-form"));
+});
 
 let btnUpload = document.getElementById("btn_modal");
 btnUpload.addEventListener("click", (e)=>{
     e.preventDefault();
-    if (validateForm()) {
+    if (validateForm(document.getElementById("add-info-form"))) {
         return;
     };
     const subjectData = new FormData(document.getElementById("add-info-form"))
@@ -67,6 +87,8 @@ btnUpload.addEventListener("click", (e)=>{
           })
           .catch(error => alert(error['error']));
           closeModal();
+    } else if (action == 'asign') {
+
     } else {
         fetch(`/edit_subject/${action}`, {
             method: 'PUT',

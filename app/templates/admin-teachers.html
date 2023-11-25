@@ -59,7 +59,7 @@
                     <td>{{teacher.first_lastname + ' ' + teacher.second_lastname}}</td>                    
                     <td>{{teacher.gender.gender}}</td>                
                     <td>{{teacher.work_hours}}</td>                                                                     
-                    <td><button id="{{teacher.teacher_id}}" class="btn-edit" onclick="btnsEdit({{teacher.teacher_id}})">Editar</button><button id="{{teacher.teacher_id}}" class="btn-delete" onclick="deleteTeacher({{teacher.teacher_id}})">Eliminar</button></td>                                    
+                    <td><button id="{{teacher.teacher_id}}" class="btn-edit" onclick="btnsEdit({{teacher.teacher_id}})">Editar</button><button id="{{teacher.teacher_id}}" class="btn-delete" onclick="deleteTeacher({{teacher.teacher_id}})">Eliminar</button><button id="{{teacher.teacher_id}}" class="btn-asign" onclick="asignSubjects({{teacher.teacher_id}})">Materias</button></td>                                    
                 </tr>
             {% endfor %}
             </tbody>

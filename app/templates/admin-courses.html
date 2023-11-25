@@ -57,7 +57,7 @@
                 <td>{{course.contraction}}</td>
                 <td>{{course.parallel.parallel}}</td>                                 
                 <td>{{course.tutor.salutation.salutation + ' ' + course.tutor.first_name + ' ' + course.tutor.first_lastname}}</td>                                                                                         
-                <td><button id="{{course.course_id}}" class="btn-edit" onclick="btnsEdit({{course.course_id}})">Editar</button><button id="{{course.course_id}}" class="btn-delete" onclick="deleteCourse({{course.course_id}})">Eliminar</button></td>                                    
+                <td><button id="{{course.course_id}}" class="btn-edit" onclick="btnsEdit({{course.course_id}})">Editar</button><button id="{{course.course_id}}" class="btn-delete" onclick="deleteCourse({{course.course_id}})">Eliminar</button><button id="{{course.course_id}}" class="btn-asign" onclick="asignTeachers({{course.course_id}})">Docentes</button></td>                                    
             </tr>  
         {% endfor %}
             </tbody>

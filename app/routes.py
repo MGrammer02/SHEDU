@@ -60,7 +60,8 @@ def adminTeachers():
 @login_required
 def adminSubjects():
     subjects = Subjects.query.order_by(Subjects.subject).all()
-    return render_template('admin-subjects.html', subjects=subjects)
+    courses = Courses.query.all()
+    return render_template('admin-subjects.html', subjects=subjects, courses=courses)
 
 @app.route('/admin-courses')
 @login_required

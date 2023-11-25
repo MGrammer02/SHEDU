@@ -51,7 +51,11 @@
                     <tr>
                         <td>{{subject.subject_id}}</td>
                         <td>{{subject.subject}}</td>                                                               
-                        <td><button id="{{subject.subject_id}}" class="btn-edit" onclick="btnsEdit({{subject.subject_id}})">Editar</button><button id="{{subject.subject_id}}" class="btn-delete" onclick="deleteSubject({{subject.subject_id}})">Eliminar</button></td>                                    
+                        <td>
+                            <button id="{{subject.subject_id}}" class="btn-edit" onclick="btnsEdit({{subject.subject_id}})">Editar</button>
+                            <button id="{{subject.subject_id}}" class="btn-delete" onclick="deleteSubject({{subject.subject_id}})">Eliminar</button>
+                            <button id="{{subject.subject_id}}" class="btn-asign" onclick="asignCourses({{subject.subject_id}})">Cursos</button>
+                        </td>                                    
                     </tr>  
                 {% endfor %}  
                     </tbody>
@@ -74,6 +78,25 @@
                     <input id="subject" maxlength="25" name="subject" required>
                 </div>
                 <input id="btn_modal" type="submit" value="">
+            </form>
+        </div>
+    </div>
+    <div class="modal-asign-container closed flex-j-c">
+        <div class="modal-asign">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x-asign" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+            </svg>
+            <h3 id="title_modal-asign" class="txt-c"></h3>
+            <form id="asign-info-form" class="flex-aj-c">
+                <div class="div-asign-form">
+                {% for course in courses %}
+                        <label class="flex-aj-c">{{course.course + ' ' + course.parallel.parallel}}</label>
+                        <input class="input-checkbox" type="checkbox" id="course.course_id" name="course" required>
+                {% endfor %}
+                </div>
+                <input id="btn_modal-asign" type="submit" value="">
             </form>
         </div>
     </div>
