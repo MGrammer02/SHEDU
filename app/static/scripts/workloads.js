@@ -1,14 +1,19 @@
 
 let action = 'upload';
-openModal = (edit, courseId) => {
+openModal = (edit, courseId, subjectId) => {
     if (edit) {
-        fetch(`/get_course/${courseId}`)
+        fetch(`/get_workload/${courseId}&${subjectId}`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById("course").value = data.course;
-            document.getElementById("contraction").value = data.contraction;
-            document.getElementById("parallel").value = data.parallel_id;
-            document.getElementById("tutor").value = data.tutor;
+            document.getElementById("subject").setAttribute("disabled", "");
+            subject = document.createElement("OPTION");
+            subject.value = subjectId;
+            subject.text = data.subject;
+            subject.id = "editOption";
+            document.getElementById("subject").appendChild(subject);
+            document.getElementById("subject").value = subjectId;
+            document.getElementById("teacher").value = data.teacher;
+            document.getElementById("hours").value = data.hours;
         })
         .catch(error => {
             closeModal();
@@ -18,6 +23,10 @@ openModal = (edit, courseId) => {
     document.querySelector(".modal-container").classList.remove("closed");
 }
 closeModal = () => {
+    if (document.getElementById("editOption")) {
+        document.getElementById("subject").removeAttribute("disabled");
+        editOption.outerHTML = "";
+    }
     document.querySelector(".modal-container").classList.add("closed");
     document.querySelector("#add-info-form").reset();
 }
@@ -39,18 +48,17 @@ validateForm = () => {
     return false;
 }
 
-
 document.querySelector(".btn-add").addEventListener("click", (e)=> {
-    document.getElementById("title_modal").innerHTML = "Agregar Curso";
-    document.getElementById("btn_modal").value = "Subir información"
+    document.getElementById("title_modal").innerHTML = "Agregar Carga Horaria";
+    document.getElementById("btn_modal").value = "Subir información";
     action = 'upload';
     openModal();
 })
-btnsEdit = (id)=> {
-    document.getElementById("title_modal").innerHTML = "Actualizar Curso";
-    document.getElementById("btn_modal").value = "Actualizar"
-    action = id;
-    openModal(true, id);
+btnsEdit = (courseId, subjectId)=> {
+    document.getElementById("title_modal").innerHTML = "Actualizar Carga Horaria";
+    document.getElementById("btn_modal").value = "Actualizar";
+    action = [courseId, subjectId];
+    openModal(true, courseId, subjectId);
 }
 document.querySelector(".icon-tabler-x").addEventListener("click", ()=>{
     closeModal();
@@ -64,7 +72,7 @@ btnUpload.addEventListener("click", (e)=>{
     };
     const courseData = new FormData(document.getElementById("add-info-form"))
     if (action == 'upload') {
-        fetch('/add_course', {
+        fetch('/add_workload', {
             method: 'POST',
             body: courseData
           })
@@ -78,7 +86,7 @@ btnUpload.addEventListener("click", (e)=>{
           .catch(error => alert(error['error']));
           closeModal();
     } else {
-        fetch(`/edit_course/${action}`, {
+        fetch(`/edit_workload/${action[0]}&${action[1]}`, {
             method: 'PUT',
             body: courseData
           })
@@ -94,11 +102,11 @@ btnUpload.addEventListener("click", (e)=>{
     }
 })
 
-deleteCourse = (id_course) => {
-    if (!confirm("¿Está seguro que sea eliminar este curso :o?")) {
+deleteCourseSubject = (courseId, subjectId) => {
+    if (!confirm("¿Está seguro que sea eliminar esta carga horaria?")) {
         return;
     }
-    fetch(`/delete_course/${id_course}`, {
+    fetch(`/delete_workload/${courseId}&${subjectId}`, {
         method: 'DELETE',
       })
       .then(response => response.json())

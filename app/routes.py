@@ -7,7 +7,6 @@ from app.models import Salutation
 from app.models import Subjects
 from app.models import Teachers
 from app.models import Courses
-from app.models import CourseSubject
 from app.models import CourseSubjectTeacher
 from app.models import SubjectTeacher
 from app.models import CourseTeacher
@@ -40,12 +39,6 @@ def logout():
     flash('¡Ha cerrado sesión!', 'succes')
     return redirect(url_for('login'))
 
-@app.route('/add')
-def addUser():
-    new_user = Users(teacher_id=2, user='juanaquevedo', password=Users.create_password('juanita2023'), admin=True)
-    db.session.add(new_user)
-    db.session.commit()
-    return redirect(url_for('index'))
 
 #-----------
 #ADMIN ROUTES
@@ -90,9 +83,26 @@ def adminSalutation():
 @app.route('/admin-users')
 @login_required
 def adminUsers():
+    teacher_ids_to_exclude = [result.teacher_id for result in Users.query.all()]
+    teachers = Teachers.query.filter(~Teachers.teacher_id.in_(teacher_ids_to_exclude)).order_by(Teachers.first_name, Teachers.first_lastname).all()
     users = Users.query.all()
-    teachers = Teachers.query.order_by(Teachers.first_name, Teachers.first_lastname).all()
     return render_template('admin-users.html', users=users, teachers=teachers)
+
+@app.route('/admin-courses-subjects')
+@login_required
+def adminCoursesSubjects():
+    courses = Courses.query.order_by(Courses.course).all()
+    return render_template('admin-courses-subjects.html', courses=courses)
+
+@app.route('/workloads/<int:course_id>')
+@login_required
+def workloads(course_id):
+    subject_ids_to_exclude = [result.subject_id for result in CourseSubjectTeacher.query.filter_by(course_id=course_id).all()]
+    subjects = Subjects.query.filter(~Subjects.subject_id.in_(subject_ids_to_exclude)).order_by(Subjects.subject).all()
+    teachers = Teachers.query.order_by(Teachers.first_name, Teachers.first_lastname).all()
+    course = Courses.query.get(course_id)
+    workloads = CourseSubjectTeacher.query.filter_by(course_id=course_id).join(Subjects).order_by(Subjects.subject).all()
+    return render_template('workloads.html', course=course, workloads=workloads, subjects=subjects, teachers=teachers)
 
 #------------------
 #<-----ADMIN ROUTES
@@ -102,7 +112,7 @@ def adminUsers():
 @login_required
 def get_salutations():
     if current_user.admin:
-        return Salutation.query.all()
+        return Salutation.query.order_by(Salutation.salutation).all()
   
     
 @app.route('/getGenders')
@@ -144,6 +154,22 @@ def get_teacher(teacher_id):
             return jsonify(teacher_info)
         else:
             raise Exception({'error': 'Profesor no encontrado'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/get_teacher-info/<int:teacher_id>')
+@login_required
+def get_teacher_info(teacher_id):
+    try:
+        info = CourseSubjectTeacher.query.filter_by(teacher_id=teacher_id).all()
+        if info:
+            teacher_info = {
+                'teacher_info': [[result.course.course + ' ' + result.course.parallel.parallel, result.subject.subject] for result in info]
+            }
+            return jsonify(teacher_info)
+        else:
+            print("ssssss")
+            return ({'error': 'No se le asignaron cargas horarias'})
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -274,6 +300,7 @@ def delete_course(course_id):
             else:
                 raise Exception({'error': 'Curso no encontrado :('})
         except Exception as e:
+            print(e)
             return jsonify({'error': str(e)})
 
 #-------------   
@@ -329,7 +356,7 @@ def edit_subject(subject_id):
 def delete_subject(subject_id):
     if(current_user.admin):
         try:
-            subject = Subjects.query.get(subject_id)
+            subject = Subjects.query.filter_by(subject_id=subject_id).first()
             if subject:
                 db.session.delete(subject)
                 db.session.commit()
@@ -400,6 +427,7 @@ def delete_salutation(salutation_id):
             else:
                 raise Exception({'error': 'Salutación no encontrada :('})
         except Exception as e:
+            print(e)
             return jsonify({'error': str(e)})
 
 #--------------   
@@ -473,7 +501,6 @@ def delete_parallel(parallel_id):
 def get_user(user_id):
     try:
         user = Users.query.get(user_id)
-        print(user)
         if user:
             user_info = {
                 'teacher_id': user.teacher_id,
@@ -547,3 +574,73 @@ def delete_user(user_id):
         except Exception as e:
             return jsonify({'error': str(e)})
         
+#--------------------
+#CRUD CARGAS HORARIAS 
+#--------------------
+@app.route('/get_workload/<int:course_id>&<int:subject_id>')
+@login_required
+def get_workload(course_id, subject_id):
+    try:
+        workload = CourseSubjectTeacher.query.get([course_id, subject_id])
+        if workload:
+            info = {
+                'subject': workload.subject.subject,
+                'teacher': workload.teacher_id,
+                'hours': workload.hours
+            }
+            return jsonify(info)
+        else:
+            raise Exception(jsonify({'error': 'Carga Horaria no encontrada :('}))
+    except Exception as e:
+        return jsonify({'error': str(e)})
+ 
+@app.route('/add_workload', methods=['POST'])
+@login_required
+def add_workload():
+    if current_user.admin:
+        try:
+            subject_id = request.form.get('subject')
+            course_id = request.form.get('course')
+            teacher_id = request.form.get('teacher')
+            hours = request.form.get('hours')
+            
+            new_course_subject = CourseSubjectTeacher(course_id =course_id, subject_id=subject_id, teacher_id=teacher_id, hours=hours)
+
+            # Agregar el profesor a la base de datos
+            db.session.add(new_course_subject)
+            db.session.commit()
+            return jsonify({'message': 'Carga horaria agregada exitosamente! :D'})
+        except Exception as e:
+            print(e)
+            return jsonify({'error': str(e)})
+
+@app.route('/edit_workload/<int:course_id>&<int:subject_id>', methods=['PUT'])
+@login_required
+def edit_workload(course_id, subject_id):
+    if (current_user.admin):
+        try:
+            workload = CourseSubjectTeacher.query.get([course_id, subject_id])
+            workload.hours = request.form.get('hours')
+            workload.teacher_id = request.form.get('teacher')
+            
+            # Actualizar info del usuario a la base de datos
+            db.session.commit()
+            return jsonify({'message': 'Carga horaria actualizada exitosamente! :D'})
+        except Exception as e:
+            
+            return jsonify({'error': str(e)})
+        
+@app.route('/delete_workload/<int:course_id>&<int:subject_id>', methods=['DELETE'])
+@login_required
+def delete_workload(course_id, subject_id):
+    if(current_user.admin):
+        try:
+            workload = CourseSubjectTeacher.query.get([course_id, subject_id])
+            if workload:
+                db.session.delete(workload)
+                db.session.commit()
+                return jsonify({'message': 'Carga horaria eliminada correctamente! :P'})
+            else:
+                return jsonify({'error': 'Usuario no encontrado :('})
+        except Exception as e:
+            return jsonify({'error': str(e)})

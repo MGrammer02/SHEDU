@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class Parallels(db.Model):
     parallel_id = db.Column(db.Integer, primary_key=True)
     parallel = db.Column(db.String(50), nullable=False)
+    
 
 # Modelo para la tabla `genders`
 class Genders(db.Model):
@@ -45,34 +46,32 @@ class SubjectTeacher(db.Model):
     
 # Modelo para la tabla `courses`
 class Courses(db.Model):
+    #subjects = db.relationship('CourseSubjectTeacher', backref='courses', cascade='all, delete-orphan')
+    parallel = db.relationship('Parallels', backref='courses', lazy=True)
+    tutor = db.relationship('Teachers', backref='courses', lazy=True)
+    
     course_id = db.Column(db.Integer, primary_key=True)
     course = db.Column(db.String(50), nullable=False)
     contraction = db.Column(db.String(15), nullable=False)
-    parallel_id = db.Column(db.Integer, db.ForeignKey('parallels.parallel_id'), nullable=False)
+    parallel_id = db.Column(db.Integer, db.ForeignKey('parallels.parallel_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'), nullable=False)
     
-    parallel = db.relationship('Parallels', backref='courses', lazy=True)
-    tutor = db.relationship('Teachers', backref='courses', lazy=True)
 
 # Modelo para la tabla `course_teacher`
 class CourseTeacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'), nullable=False)
-
-# Modelo para la tabla `course_subject`
-class CourseSubject(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id'), nullable=False)
-    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.subject_id'), nullable=False)
-    hours = db.Column(db.Integer, nullable=False)
 
 # Modelo para la tabla `course_subject_teacher`
 class CourseSubjectTeacher(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id'), nullable=False)
-    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.subject_id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True,  nullable=False)
+    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.subject_id'), primary_key=True, nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'), nullable=False)
+    hours = db.Column(db.Integer, nullable=False)
+    teacher = db.relationship('Teachers', backref='course_subject_teacher', lazy=True)
+    subject = db.relationship('Subjects', backref='course_subject_teacher', lazy=True)
+    course = db.relationship('Courses', backref='course_subject_teacher', lazy=True)
 
 # Modelo para la tabla `users`
 class Users(db.Model, UserMixin):

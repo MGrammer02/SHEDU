@@ -1,6 +1,6 @@
 
 let action = 'upload';
-openModal = (edit, teacherId) => {
+openModal = (modal, edit, teacherId) => {
     if (edit) {
         fetch(`/get_teacher/${teacherId}`)
         .then(response => response.json())
@@ -18,7 +18,7 @@ openModal = (edit, teacherId) => {
             alert(error['error'])
         });
     }
-    document.querySelector(".modal-container").classList.remove("closed");
+    modal.classList.remove("closed");
 }
 closeModal = () => {
     document.querySelector(".modal-container").classList.add("closed");
@@ -42,21 +42,26 @@ validateForm = () => {
     return false;
 }
 
-
 document.querySelector(".btn-add").addEventListener("click", (e)=> {
     document.getElementById("title_modal").innerHTML = "Agregar Docente";
     document.getElementById("btn_modal").value = "Subir información"
     action = 'upload';
-    openModal();
+    openModal(document.querySelector(".modal-container"));
 })
+
 btnsEdit = (id)=> {
     document.getElementById("title_modal").innerHTML = "Actualizar Docente";
     document.getElementById("btn_modal").value = "Actualizar"
     action = id;
-    openModal(true, id);
+    openModal(document.querySelector(".modal-container"), true, id);
 }
+
 document.querySelector(".icon-tabler-x").addEventListener("click", ()=>{
     closeModal();
+})
+document.querySelector(".icon-tabler-x-asign").addEventListener("click", ()=>{
+    document.querySelector(".modal-asign-container").classList.add("closed");
+    document.getElementById("asign-info").innerHTML = '';
 })
 
 let btnUpload = document.getElementById("btn_modal");
@@ -112,4 +117,32 @@ deleteTeacher = (id_teacher) => {
       })
       .catch(error => alert(error['error']));
       closeModal();
+}
+
+adminWorkloads = () => {
+    window.open("/admin-courses-subjects")
+}
+
+viewInfo = (teacherId) => {
+    openModal(document.querySelector(".modal-asign-container"));
+    fetch(`/get_teacher-info/${teacherId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error != undefined) {
+                document.getElementById("asign-info").innerHTML = `<span style="color:#d00;font-size:1.8rem">${data.error}</span>`;
+                return;
+            }
+            block = document.createDocumentFragment("DIV");
+            block.innerHTML = "";
+            for (info of data.teacher_info) {
+                block.innerHTML += `<div class="flex-aj-c flex-column"><span class="span-course">${info[0]}</span> <span class="span-subject">${info[1]}</span></div>`
+            }
+            document.getElementById("asign-info").innerHTML = block.innerHTML;
+        })
+        .catch(error => {
+            document.querySelector(".modal-asign-container").classList.add("closed");
+            document.getElementById("asign-info").innerHTML = '';
+            console.log(error);
+            alert(error.error)
+        });
 }
