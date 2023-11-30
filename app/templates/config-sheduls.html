@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='admin-page.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/shedu-logo.ico') }}">
-    <title>Administración: Docentes</title>
+    <title>Administración: Cursos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700;800&family=Nunito:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -35,33 +35,26 @@
         </div>
     </header>
     <main class="flex-column">
-        <h1>Administración de Docentes</h1>
-        <button class="btn-add">Añadir Docente</button>
-        {% if teachers%}
+        <h1>Configurar horarios</h1>
+        {% if shedul_config.shedul_config_id %}
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Salutación</th>
-                    <th>Nombres</th>
-                    <th>Apellidos</th>
-                    <th>Sexo</th>
-                    <th>Horas Laborales</th>
-                    <th>Acción</th>
+                    <th>Días semanales</th>
+                    <th>Horas po día</th>
+                    <th>Duración de hora</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-            {% for teacher in teachers %}
-                <tr>
-                    <td>{{teacher.teacher_id}}</td>
-                    <td>{{teacher.salutation.salutation}}</td>
-                    <td>{{teacher.first_name + ' ' + teacher.second_name}}</td>                    
-                    <td>{{teacher.first_lastname + ' ' + teacher.second_lastname}}</td>                    
-                    <td>{{teacher.gender.gender}}</td>                
-                    <td>{{teacher.work_hours}}</td>                                                                     
-                    <td><button id="{{teacher.teacher_id}}" class="btn-edit" onclick="btnsEdit({{teacher.teacher_id}})">Editar</button><button id="{{teacher.teacher_id}}" class="btn-delete" onclick="deleteTeacher({{teacher.teacher_id}})">Eliminar</button><button id="{{teacher.teacher_id}}" class="btn-asign" onclick="viewInfo({{teacher.teacher_id}})">Asignaciones</button></td>                                    
-                </tr>
-            {% endfor %}
+            <tr>
+                <td>{{shedul_config.shedul_config_id}}</td>
+                <td>{{shedul_config.days}}</td>
+                <td>{{shedul_config.hours}}</td>
+                <td>{{shedul_config.time}} minutos</td>                                                                                                                       
+                <td><button id="{{shedul_config.shedul_config_id}}" class="btn-edit" onclick="btnsEdit({{shedul_config.shedul_config_id}})">Editar</button></td>    
+            </tr>  
             </tbody>
         </table>
         {% else %}
@@ -78,42 +71,12 @@
             <h3 id="title_modal" class="txt-c"></h3>
             <form id="add-info-form" class="flex-aj-c">
                 <div class="flex-j-c flex-column">
-                    <label>Primer Nombre</label>
-                    <input id="firstName" maxlength="25" name="firstName" required>
+                    <label>Curso:</label>
+                    <input id="course" maxlength="25" name="course" required>
                 </div>
                 <div class="flex-j-c flex-column">
-                    <label>Segundo Nombre</label>
-                    <input id="secondName" maxlength="25" name="secondName" required>
-                </div>
-                <div class="flex-j-c flex-column">
-                    <label>Primer Apellido</label>
-                    <input id="firstLastName" maxlength="25" name="firstLastName" required>
-                </div>
-                <div class="flex-j-c flex-column">
-                    <label>Segundo Apellido</label>
-                    <input id="secondLastName" maxlength="25" name="secondLastName" required>
-                </div>
-                <div class="flex-j-c flex-column">
-                    <label>Salutación</label>
-                    <select id="salutation" name="salutation" required>
-                        <option disabled selected hidden></option>
-                        {% for salutation in salutations %}
-                            <option value="{{salutation.salutation_id}}">{{salutation.salutation}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="flex-j-c flex-column">
-                    <label class="label">Género</label>
-                    <select id="gender" name="gender" required>
-                        <option disabled selected hidden></option>
-                        {% for gender in genders %}
-                            <option value="{{gender.gender_id}}">{{gender.gender}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="flex-j-c flex-column">
-                    <label>Horas laborales</label>
-                    <input id="hours" type="number" maxlength="2" name="hours" value="8" required>
+                    <label>Contracción:</label>
+                    <input id="contraction" maxlength="15" name="contraction" required>
                 </div>
                 <input id="btn_modal" type="submit" value="">
             </form>
@@ -126,16 +89,16 @@
                 <path d="M18 6l-12 12" />
                 <path d="M6 6l12 12" />
             </svg>
-            <h3 id="title_modal-asign" class="txt-c">Asignaciones</h3>
+            <h3 id="title_modal-asign" class="txt-c">Materias</h3>
             <div id="asign-info" class="flex-a-c flex-column">
             </div>
             <button class="btn-href" onclick="adminWorkloads()">Administrar Cargas horarias</button>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='scripts/admin-teachers.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/admin-courses.js') }}"></script>
     <footer class="flex-aj-c flex-column">
         <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">
-        <div class="footer-sections flex-aj-c">
+        <div class="footer-sections flex-a-c">
             <div class="footer-sections-container">
                 <div class="w-100">
                     <h5>Vision</h5>

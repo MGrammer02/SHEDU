@@ -2,14 +2,13 @@ from flask import render_template, redirect, url_for, flash, jsonify, request
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db
 from app.forms import LoginForm
+from app.models import ShedulConfig
 from app.models import Parallels
 from app.models import Salutation
 from app.models import Subjects
 from app.models import Teachers
 from app.models import Courses
 from app.models import CourseSubjectTeacher
-from app.models import SubjectTeacher
-from app.models import CourseTeacher
 from app.models import Genders
 from app.models import Users
 
@@ -43,6 +42,12 @@ def logout():
 #-----------
 #ADMIN ROUTES
 #-----------
+@app.route('/config-sheduls')
+@login_required
+def configSheduls():
+    shedul_config = ShedulConfig.query.first()
+    return render_template('config-sheduls.html', shedul_config=shedul_config)
+
 @app.route('/admin-teachers')
 @login_required
 def adminTeachers():
@@ -133,6 +138,12 @@ def get_teachers():
     if current_user.admin:
         return Teachers.query.order_by(Teachers.first_name, Teachers.first_lastname).all()
 
+#--------------------
+#CRUD CONFIG HORARIOS
+#--------------------
+
+
+
 #-------------   
 #CRUD DOCENTES
 #-------------
@@ -149,7 +160,8 @@ def get_teacher(teacher_id):
                 'second_lastname': teacher.second_lastname,
                 'work_hours': teacher.work_hours,
                 'gender_id': teacher.gender_id,
-                'salutation_id': teacher.salutation_id
+                'salutation_id': teacher.salutation_id,
+                'salutation': teacher.salutation.salutation
             }
             return jsonify(teacher_info)
         else:
@@ -243,11 +255,28 @@ def get_course(course_id):
                 'course': course.course,
                 'contraction': course.contraction,
                 'parallel_id': course.parallel_id,
+                'parallel': course.parallel.parallel,
                 'tutor': course.teacher_id
             }
             return jsonify(course_info)
         else:
             raise Exception({'error': 'Curso no encontrado'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/get_course-info/<int:course_id>')
+@login_required
+def get_course_info(course_id):
+    try:
+        info = CourseSubjectTeacher.query.filter_by(course_id=course_id).all()
+        if info:
+            course_info = {
+                'course_info': [[result.subject.subject, result.teacher.salutation.salutation + ' ' + result.teacher.first_name + ' ' + result.teacher.first_lastname] for result in info]
+            }
+            return jsonify(course_info)
+        else:
+            print("ssssss")
+            return ({'error': 'No se le asignaron cargas horarias'})
     except Exception as e:
         return jsonify({'error': str(e)})
 

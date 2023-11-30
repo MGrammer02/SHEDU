@@ -57,7 +57,7 @@
                 <td>{{course.contraction}}</td>
                 <td>{{course.parallel.parallel}}</td>                                 
                 <td>{{course.tutor.salutation.salutation + ' ' + course.tutor.first_name + ' ' + course.tutor.first_lastname}}</td>                                                                                         
-                <td><button id="{{course.course_id}}" class="btn-edit" onclick="btnsEdit({{course.course_id}})">Editar</button><button id="{{course.course_id}}" class="btn-delete" onclick="deleteCourse({{course.course_id}})">Eliminar</button><button id="{{course.course_id}}" class="btn-asign" onclick="asignTeachers({{course.course_id}})">Docentes</button></td>                                    
+                <td><button id="{{course.course_id}}" class="btn-edit" onclick="btnsEdit({{course.course_id}})">Editar</button><button id="{{course.course_id}}" class="btn-delete" onclick="deleteCourse({{course.course_id}})">Eliminar</button><button id="{{course.course_id}}" class="btn-asign" onclick="viewInfo({{course.course_id}})">Materias</button></td>    
             </tr>  
         {% endfor %}
             </tbody>
@@ -103,6 +103,19 @@
                 </div>
                 <input id="btn_modal" type="submit" value="">
             </form>
+        </div>
+    </div>
+    <div class="modal-asign-container closed flex-j-c">
+        <div class="modal-asign">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x-asign" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+            </svg>
+            <h3 id="title_modal-asign" class="txt-c">Materias</h3>
+            <div id="asign-info" class="flex-a-c flex-column">
+            </div>
+            <button class="btn-href" onclick="adminWorkloads()">Administrar Cargas horarias</button>
         </div>
     </div>
     <script src="{{ url_for('static', filename='scripts/admin-courses.js') }}"></script>

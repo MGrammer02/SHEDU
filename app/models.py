@@ -4,6 +4,14 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
     
 
+
+# Modelo para la tabla `shedul_config`
+class ShedulConfig(db.Model):
+    shedul_config_id = db.Column(db.Integer, primary_key=True)
+    days = db.Column(db.Integer, nullable=False)
+    hours = db.Column(db.Integer, nullable=False)
+    time = db.Column(db.Integer, nullable=False)
+    
 # Modelo para la tabla `parallels`
 class Parallels(db.Model):
     parallel_id = db.Column(db.Integer, primary_key=True)
@@ -39,11 +47,6 @@ class Subjects(db.Model):
     subject_id = db.Column(db.Integer, primary_key=True)
     subject = db.Column(db.String(25), nullable=False)
     
-class SubjectTeacher(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    subject_id = db.Column(db.Integer, db.ForeignKey('subjects.subject_id'), nullable=False)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'), nullable=False)
-    
 # Modelo para la tabla `courses`
 class Courses(db.Model):
     #subjects = db.relationship('CourseSubjectTeacher', backref='courses', cascade='all, delete-orphan')
@@ -54,13 +57,6 @@ class Courses(db.Model):
     course = db.Column(db.String(50), nullable=False)
     contraction = db.Column(db.String(15), nullable=False)
     parallel_id = db.Column(db.Integer, db.ForeignKey('parallels.parallel_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'), nullable=False)
-    
-
-# Modelo para la tabla `course_teacher`
-class CourseTeacher(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'), nullable=False)
 
 # Modelo para la tabla `course_subject_teacher`

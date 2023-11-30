@@ -1,6 +1,6 @@
 
 let action = 'upload';
-openModal = (edit, courseId) => {
+openModal = (modal, edit, courseId) => {
     if (edit) {
         fetch(`/get_course/${courseId}`)
         .then(response => response.json())
@@ -15,7 +15,7 @@ openModal = (edit, courseId) => {
             alert(error['error'])
         });
     }
-    document.querySelector(".modal-container").classList.remove("closed");
+    modal.classList.remove("closed");
 }
 closeModal = () => {
     document.querySelector(".modal-container").classList.add("closed");
@@ -39,21 +39,24 @@ validateForm = () => {
     return false;
 }
 
-
 document.querySelector(".btn-add").addEventListener("click", (e)=> {
     document.getElementById("title_modal").innerHTML = "Agregar Curso";
     document.getElementById("btn_modal").value = "Subir información"
     action = 'upload';
-    openModal();
+    openModal(document.querySelector(".modal-container"));
 })
 btnsEdit = (id)=> {
     document.getElementById("title_modal").innerHTML = "Actualizar Curso";
     document.getElementById("btn_modal").value = "Actualizar"
     action = id;
-    openModal(true, id);
+    openModal(document.querySelector(".modal-container"), true, id);
 }
 document.querySelector(".icon-tabler-x").addEventListener("click", ()=>{
     closeModal();
+})
+document.querySelector(".icon-tabler-x-asign").addEventListener("click", ()=>{
+    document.querySelector(".modal-asign-container").classList.add("closed");
+    document.getElementById("asign-info").innerHTML = '';
 })
 
 let btnUpload = document.getElementById("btn_modal");
@@ -109,4 +112,39 @@ deleteCourse = (id_course) => {
       })
       .catch(error => alert(error['error']));
       closeModal();
+}
+
+
+adminWorkloads = (courseID) => {
+    window.open(`/workloads/${courseID}`);
+}
+
+viewInfo = (courseId) => {
+    openModal(document.querySelector(".modal-asign-container"));
+    fetch(`/get_course/${courseId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("title_modal-asign").innerHTML =  `${data.contraction} ${data.parallel} | Materias:`;
+        })
+    document.querySelector(".btn-href").setAttribute("onclick", `adminWorkloads(${courseId})`);
+    fetch(`/get_course-info/${courseId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error != undefined) {
+                document.getElementById("asign-info").innerHTML = `<span style="color:#d00;font-size:1.8rem;margin:auto">${data.error}</span>`;
+                return;
+            }
+            block = document.createDocumentFragment("DIV");
+            block.innerHTML = "";
+            for (info of data.course_info) {
+                block.innerHTML += `<div class="flex-aj-c flex-column"><span class="span-course">${info[0]}</span> <span class="span-subject">${info[1]}</span></div>`;
+            }
+            document.getElementById("asign-info").innerHTML = block.innerHTML;
+        })
+        .catch(error => {
+            document.querySelector(".modal-asign-container").classList.add("closed");
+            document.getElementById("asign-info").innerHTML = '';
+            console.log(error);
+            alert(error.error)
+        });
 }

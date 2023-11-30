@@ -7,6 +7,7 @@ sectionSheduls = document.getElementById("adm-sheduls");
 sectionUsers = document.getElementById("adm-users");
 sectionSalutations = document.getElementById("adm-salutations");
 sectionCoursesSubjects = document.getElementById("adm-courses-subjects");
+sectionConfigSheduls = document.getElementById("config-sheduls");
 
 sectionTeachers.addEventListener("click", ()=>{
     window.location.href = "/admin-teachers";
@@ -34,4 +35,7 @@ sectionUsers.addEventListener("click", ()=>{
 });
 sectionCoursesSubjects.addEventListener("click", ()=>{
     window.location.href = "admin-courses-subjects";
+});
+sectionConfigSheduls.addEventListener("click", ()=>{
+    window.location.href = "config-sheduls";
 });

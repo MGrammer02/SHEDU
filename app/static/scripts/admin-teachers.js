@@ -125,11 +125,16 @@ adminWorkloads = () => {
 
 viewInfo = (teacherId) => {
     openModal(document.querySelector(".modal-asign-container"));
+    fetch(`/get_teacher/${teacherId}`)
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("title_modal-asign").innerHTML =  `${data.salutation} ${data.first_name} ${data.first_lastname} | Asignaciones:`;
+    });
     fetch(`/get_teacher-info/${teacherId}`)
         .then(response => response.json())
         .then(data => {
             if (data.error != undefined) {
-                document.getElementById("asign-info").innerHTML = `<span style="color:#d00;font-size:1.8rem">${data.error}</span>`;
+                document.getElementById("asign-info").innerHTML = `<span style="color:#d00;font-size:1.8rem;margin:auto">${data.error}</span>`;
                 return;
             }
             block = document.createDocumentFragment("DIV");

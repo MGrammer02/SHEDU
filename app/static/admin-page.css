@@ -4,6 +4,9 @@ body {
 h1 {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+h3 {
+    font-size: 2.3rem;
+}
 table {
     width: 100%;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -247,6 +250,9 @@ label {
     min-height: 10rem;
     overflow-y: auto;
     overflow-x: hidden;
+}
+#asign-info div {
+    margin: auto;
 }
 .span-course {
     color: #00a39e;
