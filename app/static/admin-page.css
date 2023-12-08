@@ -116,6 +116,7 @@ main {
     align-content: center;
     min-width: 55rem;
     max-width: 60vw;
+    max-height: 90vh;
 }
 .big-modal form {
     width: 55rem;
