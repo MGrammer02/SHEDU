@@ -5,7 +5,13 @@ openModal = (edit, userId) => {
         fetch(`/get_user/${userId}`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById("teacher").value = data.teacher_id
+            document.getElementById("teacher").setAttribute("disabled", "");
+            user = document.createElement("OPTION");
+            user.value = userId;
+            user.text = data.teacher;
+            user.id = "editOption";
+            document.getElementById("teacher").appendChild(user);
+            document.getElementById("teacher").value = data.teacher_id;
             document.getElementById("user").value = data.user;
             document.getElementById("password").value = data.password;
             document.getElementById("admin").checked = data.admin;
@@ -19,6 +25,10 @@ openModal = (edit, userId) => {
     document.querySelector(".modal-container").classList.remove("closed");
 }
 closeModal = () => {
+    if (document.getElementById("editOption")) {
+        document.getElementById("teacher").removeAttribute("disabled");
+        editOption.outerHTML = "";
+    }
     document.querySelector(".modal-container").classList.add("closed");
     document.querySelector("#add-info-form").reset();
 }

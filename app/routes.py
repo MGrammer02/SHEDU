@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for, flash, jsonify, request
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db
+from datetime import datetime, timedelta
 from app.forms import LoginForm
 from app.models import ShedulConfig
 from app.models import Parallels
@@ -46,7 +47,54 @@ def logout():
 @login_required
 def configSheduls():
     shedul_config = ShedulConfig.query.first()
-    return render_template('config-sheduls.html', shedul_config=shedul_config)
+    days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    rows = int(shedul_config.hours) + int(shedul_config.breaks)
+    breaks = shedul_config.break_hours.split(';')
+    print([str(shedul_config.start_time.hour)])
+    start_time = str(shedul_config.start_time.hour) + ':' + str(shedul_config.start_time.minute)
+        
+    for i in range(len(breaks)):
+        breaks[i] = int(breaks[i])
+    
+    times = [timedelta(hours=shedul_config.start_time.hour, minutes=shedul_config.start_time.minute)]
+    for i in range(int(shedul_config.hours) + int(shedul_config.breaks)):
+        if i not in breaks:   
+            times.append(times[i] + timedelta(minutes=shedul_config.hours_duration))
+        else:
+            times.append(times[i] + timedelta(minutes=shedul_config.break_duration))
+        times[i] = str(times[i]).split(':')[0] + ':' + str(times[i]).split(':')[1]
+        
+    times[-1] = str(times[-1]).split(':')[0] + ':' + str(times[-1]).split(':')[1]
+    return render_template('config-sheduls.html', shedul_config=shedul_config, days=days[0:shedul_config.days], rows = rows, breaks=breaks, start_time=start_time, times=times)
+
+@app.route('/preview-config-sheduls', methods=['POST'])
+@login_required
+def previewConfigSheduls():
+
+    days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    rows = int(request.form.get('hours')) + int(request.form.get('breaks'))
+    breaks = request.form.get('breakHours').split(';')
+    print([str(request.form.get('startTime').split(':')[0])])
+        
+    for i in range(len(breaks)):
+        breaks[i] = int(breaks[i])
+    
+    times = [timedelta(hours=int(request.form.get('startTime').split(':')[0]), minutes=int(request.form.get('startTime').split(':')[1]))]
+    for i in range(rows):
+        if i not in breaks:
+            times.append(times[i] + timedelta(minutes=int(request.form.get('hoursDuration'))))
+        else:
+            times.append(times[i] + timedelta(minutes=int(request.form.get('breakDuration'))))
+        times[i] = str(times[i]).split(':')[0] + ':' + str(times[i]).split(':')[1]
+        
+    times[-1] = str(times[-1]).split(':')[0] + ':' + str(times[-1]).split(':')[1]
+    print(times)
+    previewInfo = {
+        'days': days[0:int(request.form.get('days'))],
+        'breaks': breaks,
+        'times': times
+    }
+    return jsonify(previewInfo)
 
 @app.route('/admin-teachers')
 @login_required
@@ -533,10 +581,12 @@ def get_user(user_id):
         if user:
             user_info = {
                 'teacher_id': user.teacher_id,
+                'teacher': user.teacher.salutation.salutation + ' ' + user.teacher.first_name + ' ' + user.teacher.first_lastname,
                 'user': user.user,
                 'password': "",
                 'admin': user.admin
             }
+            print(user_info["teacher"])
             return jsonify(user_info)
         else:
             raise Exception(jsonify({'error': 'Usuario no encontrado :('}))
@@ -574,10 +624,8 @@ def edit_user(user_id):
         try:
             user = Users.query.get(user_id)
             pwd_hashed = Users.create_password(request.form.get('password'))
-            user.teacher_id = request.form.get('teacher')
             user.user = request.form.get('user')
             user.password = pwd_hashed
-            
             if request.form.get('admin') == 'on': user.admin = True
             else: user.admin = False
             

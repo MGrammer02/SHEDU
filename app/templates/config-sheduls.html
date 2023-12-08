@@ -35,34 +35,86 @@
         </div>
     </header>
     <main class="flex-column">
-        <h1>Configurar horarios</h1>
-        {% if shedul_config.shedul_config_id %}
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Días semanales</th>
-                    <th>Horas po día</th>
-                    <th>Duración de hora</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{shedul_config.shedul_config_id}}</td>
-                <td>{{shedul_config.days}}</td>
-                <td>{{shedul_config.hours}}</td>
-                <td>{{shedul_config.time}} minutos</td>                                                                                                                       
-                <td><button id="{{shedul_config.shedul_config_id}}" class="btn-edit" onclick="btnsEdit({{shedul_config.shedul_config_id}})">Editar</button></td>    
-            </tr>  
-            </tbody>
-        </table>
-        {% else %}
-            <h3 class="txt-c">"NO HAY DATOS"</h3>
-        {% endif %}
+        <h1>Configuración de Horarios</h1>
+        <button class="btn-add">Editar Configuración</button>
+        <div>
+            <div class="config-read flex-aj-c">
+                <div class="flex-aj-c flex-column" style="max-width: 40%">
+                    <h3 style="margin: 2rem">Configuración</h3>
+                    <form class="flex-aj-c">
+                        <div class="flex-aj-c flex-column">
+                            <label>Dìas a la semana</label>
+                            <input readonly id="days-read" value="{{shedul_config.days}} días">                        
+                        </div>
+                        <div class="flex-aj-c flex-column">
+                            <label>Día de inicio</label>
+                            <input readonly id="start-day-read" value="{{days[shedul_config.start_day]}}">              
+                        </div>
+                        <div class="flex-aj-c flex-column">
+                            <label>Horas de clase diarias</label>
+                            <input readonly id="classes-read" value="{{shedul_config.hours}}">                       
+                        </div>                    
+                        <div class="flex-aj-c flex-column">
+                            <label>Duración por clase (minutos)</label>
+                            <input readonly id="class-duration-read" value="{{shedul_config.hours_duration}} minutos">                       
+                        </div>                    
+                        <div class="flex-aj-c flex-column">
+                            <label>Número de Recesos</label>
+                            <input readonly id="recess-read" value="{{shedul_config.breaks}}">                     
+                        </div>
+                        <div class="flex-aj-c flex-column">
+                            <label>Duración de Recesos (minutos)</label>
+                            <input readonly id="recess-duration-read" value="{{shedul_config.break_duration}} minutos">                   
+                        </div>
+                        <div class="flex-aj-c flex-column">
+                            <label>Hora de entrada</label>
+                            <input readonly id="start-time-read" value="{{shedul_config.start_time}}">                
+                        </div>
+                    </form>
+                </div>
+                <div class="recess-selector table-container flex-a-c flex-column">
+                    <h3 style="margin:1rem">Vista previa</h3>
+                    <table class="txt-c">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                {% for day in days%}
+                                    <th>{{day}}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in range(rows)%}
+                            {% if i in breaks %}
+                            <tr class="break-hour">
+                                <td><b>{{times[i]}}</b></td>
+                                {% for day in days%}
+                                <td><b>Receso</b></td>
+                                {% endfor %}
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td>{{times[i]}}</td>
+                                {% for day in days%}
+                                <td>Clase</td>
+                                {% endfor %}
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                            <tr>
+                                <td>{{times[-1]}}</td>
+                                {% for day in days %}
+                                <td><b>Salida</b></td>
+                                {% endfor %}
+                            <tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
     <div class="modal-container closed flex-j-c">
-        <div class="modal">
+        <div class="modal big-modal" style="min-width: 55rem;max-width:60vw">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                 <path d="M18 6l-12 12" />
@@ -70,32 +122,53 @@
             </svg>
             <h3 id="title_modal" class="txt-c"></h3>
             <form id="add-info-form" class="flex-aj-c">
-                <div class="flex-j-c flex-column">
-                    <label>Curso:</label>
-                    <input id="course" maxlength="25" name="course" required>
+                <div class="flex-aj-c flex-column">
+                    <label>Dìas a la semana</label>
+                    <input type="number" id="days" name="days">                  
                 </div>
-                <div class="flex-j-c flex-column">
-                    <label>Contracción:</label>
-                    <input id="contraction" maxlength="15" name="contraction" required>
+                <div class="flex-aj-c flex-column">
+                    <label>Horas de clase diarias</label>
+                    <input type="number" id="hours" name="hours">              
+                </div>                    
+                <div class="flex-aj-c flex-column">
+                    <label>Duración por clase (minutos)</label>
+                    <input type="number" id="hours-duration" name="hoursDuration">                       
+                </div>                    
+                <div class="flex-aj-c flex-column">
+                    <label>Número de Recesos</label>
+                    <input type="number" id="breaks" name="breaks">                    
+                </div>
+                <div class="flex-aj-c flex-column">
+                    <label>Duración de Recesos (minutos)</label>
+                    <input type="number" id="break-duration" name="breakDuration">                   
+                </div>
+                <div class="flex-aj-c flex-column">
+                    <label>Horas de Recesos</label>
+                    <input placeholder="Separar por ';'" id="break-hours" name="breakHours">                   
+                </div>
+                <div class="flex-aj-c flex-column">
+                    <label>Hora de entrada</label>
+                    <input type="time" id="start-time-read" name="startTime">
+                </div>
+                <div class="flex-a-c" style="width: 19rem;height:100%;justify-content: end">
+                    <div class="flex-a-c btn-show-pwd" onclick="viewPreview()"><span id="btn-show-pwd__span">Vista Previa</span><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-check" width="28" height="28" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                        <path d="M11.102 17.957c-3.204 -.307 -5.904 -2.294 -8.102 -5.957c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a19.5 19.5 0 0 1 -.663 1.032" />
+                        <path d="M15 19l2 2l4 -4" />
+                    </svg></div>
                 </div>
                 <input id="btn_modal" type="submit" value="">
             </form>
-        </div>
-    </div>
-    <div class="modal-asign-container closed flex-j-c">
-        <div class="modal-asign">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x-asign" width="28" height="28" viewBox="0 0 24 24" stroke-width="1" stroke="#555" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M18 6l-12 12" />
-                <path d="M6 6l12 12" />
-            </svg>
-            <h3 id="title_modal-asign" class="txt-c">Materias</h3>
-            <div id="asign-info" class="flex-a-c flex-column">
+            <div id="breaks-selector">
+                <table id="breaks-selector-table" style="margin: 1rem auto" class="txt-c">
+                    <thead id="breaks-selector-head"></thead>
+                    <tbody  id="breaks-selector-body"></tbody>
+                </table>
             </div>
-            <button class="btn-href" onclick="adminWorkloads()">Administrar Cargas horarias</button>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='scripts/admin-courses.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/admin-shedul-config.js') }}"></script>
     <footer class="flex-aj-c flex-column">
         <img class="icon-logo-shedu" src="{{ url_for('static', filename='images/shedu-logo-white.png') }}" alt="icono-shedu">
         <div class="footer-sections flex-a-c">

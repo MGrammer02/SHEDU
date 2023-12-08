@@ -7,7 +7,7 @@ h1 {
 h3 {
     font-size: 2.3rem;
 }
-table {
+table:not(.table-container table, #breaks-selector-table) {
     width: 100%;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     height: 30rem;
@@ -62,7 +62,7 @@ button:active {
     position: relative;
     top: .1rem;
 }
-thead {
+thead:not(.table-container table) {
     background-color: var(--fondo-oscuro);
     color: #fff;
     height: 4rem;
@@ -98,16 +98,29 @@ main {
     z-index: 35;
     background-color: rgba(0, 0, 0, 0.4)
 }
+.modal:not(.big-modal), .modal-asign {
+    width: 55rem;
+}
 .modal, .modal-asign {
     position: fixed;
     top: 0; right: 0; left: 0; bottom: 0;
     margin: auto;
-    width: 55rem;
     height: max-content;
+    overflow: auto;
     background-color: #fff;
     padding: 1rem 4rem 3rem;
     border-radius: 2.5rem;
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+.big-modal {
+    align-content: center;
+    min-width: 55rem;
+    max-width: 60vw;
+}
+.big-modal form {
+    width: 55rem;
+    margin: auto;
+    max-height: 90vh;
 }
 .closed {
     display: none;
@@ -311,4 +324,44 @@ label {
 .course-div:active {
     position: relative;
     transform: scale(105%);
+}
+
+/* CONFIG READ */
+.config-read {
+    margin: auto;
+    margin-top: 1rem;
+    background:#fff;
+    padding: 3rem 3rem;
+    border-radius:1rem;
+    box-shadow:.2rem .1rem .2rem #777;
+    min-height: 25rem;
+}
+.config-read form {
+    flex-basis: 45%;
+    flex-wrap: wrap;
+}
+.table-container {
+    border-left: .2rem dashed rgba(110, 0, 165, 0.623);
+    padding-left: 5rem;
+    margin-left: 5rem;
+    flex-basis: 50%;
+    min-height: inherit;
+}
+.config-read h3 {
+    font-size: 1.7rem;
+}
+.table-container thead td {
+    padding: .5rem 1.5rem;
+}
+.table-container tbody td {
+    padding: .5rem 1.5rem;
+}
+.break-hour {
+    background-color: rgb(0, 208, 212);
+}
+.break-hour:hover {
+    background-color: rgb(0, 188, 191);
+}
+#breaks-selector-table td {
+    padding: .5rem 1rem;
 }

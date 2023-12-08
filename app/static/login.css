@@ -12,7 +12,7 @@ body::after {
 }
 img {
     z-index: 10;
-    width:27rem;
+    width: 27rem;
     margin: 0 auto 1rem;
 }
 h2 {

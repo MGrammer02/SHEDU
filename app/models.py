@@ -9,8 +9,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class ShedulConfig(db.Model):
     shedul_config_id = db.Column(db.Integer, primary_key=True)
     days = db.Column(db.Integer, nullable=False)
+    start_day = db.Column(db.Integer)
     hours = db.Column(db.Integer, nullable=False)
-    time = db.Column(db.Integer, nullable=False)
+    hours_duration = db.Column(db.Integer, nullable=False)
+    breaks = db.Column(db.String(50))
+    break_duration = db.Column(db.Integer)
+    break_hours = db.Column(db.String(50))
+    start_time = db.Column(db.Time)
     
 # Modelo para la tabla `parallels`
 class Parallels(db.Model):
@@ -71,6 +76,7 @@ class CourseSubjectTeacher(db.Model):
 
 # Modelo para la tabla `users`
 class Users(db.Model, UserMixin):
+    
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.teacher_id'), primary_key=True)
     user = db.Column(db.String(15), unique=True, nullable=False)
     password = db.Column(db.LargeBinary, nullable=False)
