@@ -1,18 +1,22 @@
 
 let action = 'upload';
-openModal = (modal, edit, courseId) => {
+openModal = (modal, edit) => {
     if (edit) {
-        fetch(`/get_course/${courseId}`)
+        fetch(`/get_shedul_config`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById("course").value = data.course;
-            document.getElementById("contraction").value = data.contraction;
-            document.getElementById("parallel").value = data.parallel_id;
-            document.getElementById("tutor").value = data.tutor;
+            document.getElementById("startWeek").value = data.start_week;
+            document.getElementById("endWeek").value = data.end_week;
+            document.getElementById("hours").value = data.hours;
+            document.getElementById("hoursDuration").value = data.hours_duration;
+            document.getElementById("breaks").value = data.breaks;
+            document.getElementById("breakDuration").value = data.breaks_duration;
+            document.getElementById("breakHours").value = data.breaks_hours;
+            document.getElementById("startTime").value = data.start_time;
         })
         .catch(error => {
             closeModal();
-            alert(error['error'])
+            alert(error)
         });
     }
     modal.classList.remove("closed");
@@ -20,7 +24,7 @@ openModal = (modal, edit, courseId) => {
 closeModal = () => {
     document.querySelector(".modal-container").classList.add("closed");
     document.querySelector("#add-info-form").reset();
-    document.getElementById("breaks-selector-table").innerHTML = '';
+    if (document.getElementById("breaks-selector")) {document.getElementById("breaks-selector").innerHTML = '';}
 }
 validateForm = (form) => {
     let inputs = form.querySelectorAll("input");
@@ -30,6 +34,39 @@ validateForm = (form) => {
             return true;
         } else input.style = "";
     }
+    if (document.getElementById("hours").value < 1) {
+        document.getElementById("hours").style.outline = "0.2rem solid #c00";
+        return true;
+    } else document.getElementById("hours").style.outline = "";
+
+    if (document.getElementById("hoursDuration").value < 1) {
+        document.getElementById("hoursDuration").style.outline = "0.2rem solid #c00";
+        return false;
+    } else document.getElementById("hoursDuration").style.outline = "";
+
+    if (document.getElementById("hoursDuration").value < 1) {
+        document.getElementById("hoursDuration").style.outline = "0.2rem solid #c00";
+        return true;
+    } else document.getElementById("hoursDuration").style.outline = "";
+
+    if (document.getElementById("breaks").value < 1) {
+        document.getElementById("breaks").style.outline = "0.2rem solid #c00";
+        return true;
+    } else document.getElementById("breaks").style.outline = "";
+
+    if (document.getElementById("breakDuration").value < 1) {
+        document.getElementById("breakDuration").style.outline = "0.2rem solid #c00";
+        return true;
+    } else document.getElementById("breakDuration").style.outline = "";
+
+    breakHoursArray = document.getElementById("breakHours").value.split(';');
+    for (breakHour of breakHoursArray) {
+        if(parseInt(breakHour) == NaN) {
+            document.getElementById("breakHours").style.outline = "0.2rem solid #c00";
+            return true;
+        } 
+        else document.getElementById("breakHours").style.outline = "";
+    }
     return false;
 }
 
@@ -37,7 +74,7 @@ document.querySelector(".btn-add").addEventListener("click", (e)=> {
     document.getElementById("title_modal").innerHTML = "Configuración de Horarios";
     document.getElementById("btn_modal").value = "Subir información"
     action = 'upload';
-    openModal(document.querySelector(".modal-container"));
+    openModal(document.querySelector(".modal-container"), true);
 })
 
 document.querySelector(".icon-tabler-x").addEventListener("click", ()=>{
@@ -47,11 +84,11 @@ document.querySelector(".icon-tabler-x").addEventListener("click", ()=>{
 let btnUpload = document.getElementById("btn_modal");
 btnUpload.addEventListener("click", (e)=>{
     e.preventDefault();
-    if (validateForm()) {
+    if (validateForm(document.querySelector("#add-info-form"))) {
         return;
     };
     const configData = new FormData(document.getElementById("add-info-form"))
-    fetch(`/edit_shedul-config`, {
+    fetch(`/edit_shedul_config`, {
         method: 'PUT',
         body: configData
       })
@@ -79,6 +116,12 @@ viewPreview = () => {
       .then(data => {
         console.log(data)
         // Manejar la respuesta del servidor si es necesario
+        table = document.createElement("DIV");
+        table.innerHTML = `<div id="breaks-selector">
+        <table id="breaks-selector-table" style="margin: 1rem auto" class="txt-c">
+        </table>
+        </div>`;
+        document.querySelector(".big-modal").append(table);
         document.getElementById("breaks-selector-table").innerHTML = `<thead id="breaks-selector-head"></thead>
         <tbody  id="breaks-selector-body"></tbody>`
         days = `<tr><th>Hora</th>`;

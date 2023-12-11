@@ -50,11 +50,13 @@ def configSheduls():
     days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
     rows = int(shedul_config.hours) + int(shedul_config.breaks)
     breaks = shedul_config.break_hours.split(';')
-    print([str(shedul_config.start_time.hour)])
     start_time = str(shedul_config.start_time.hour) + ':' + str(shedul_config.start_time.minute)
+    try: 
+        breaks.remove('')
+    except ValueError: pass
         
     for i in range(len(breaks)):
-        breaks[i] = int(breaks[i])
+        breaks[i] = int(breaks[i]) - 1
     
     times = [timedelta(hours=shedul_config.start_time.hour, minutes=shedul_config.start_time.minute)]
     for i in range(int(shedul_config.hours) + int(shedul_config.breaks)):
@@ -64,37 +66,18 @@ def configSheduls():
             times.append(times[i] + timedelta(minutes=shedul_config.break_duration))
         times[i] = str(times[i]).split(':')[0] + ':' + str(times[i]).split(':')[1]
         
-    times[-1] = str(times[-1]).split(':')[0] + ':' + str(times[-1]).split(':')[1]
-    return render_template('config-sheduls.html', shedul_config=shedul_config, days=days[0:shedul_config.days], rows = rows, breaks=breaks, start_time=start_time, times=times)
-
-@app.route('/preview-config-sheduls', methods=['POST'])
-@login_required
-def previewConfigSheduls():
-
-    days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-    rows = int(request.form.get('hours')) + int(request.form.get('breaks'))
-    breaks = request.form.get('breakHours').split(';')
-    print([str(request.form.get('startTime').split(':')[0])])
-        
-    for i in range(len(breaks)):
-        breaks[i] = int(breaks[i])
-    
-    times = [timedelta(hours=int(request.form.get('startTime').split(':')[0]), minutes=int(request.form.get('startTime').split(':')[1]))]
-    for i in range(rows):
-        if i not in breaks:
-            times.append(times[i] + timedelta(minutes=int(request.form.get('hoursDuration'))))
-        else:
-            times.append(times[i] + timedelta(minutes=int(request.form.get('breakDuration'))))
-        times[i] = str(times[i]).split(':')[0] + ':' + str(times[i]).split(':')[1]
+        times[i] = str(times[i]).split(':')[0] + ':' + str(times[i]).split(':')[1] + ' - ' + str(times[i + 1]).split(':')[0] + ':' + str(times[i + 1]).split(':')[1]
+    if shedul_config.start_week > shedul_config.end_week:
+        shedul_days = days[shedul_config.start_week:7]
+        for i in days[0:shedul_config.end_week + 1]:
+            shedul_days.append(i)
+    else :
+        print(int(shedul_config.end_week), int(shedul_config.start_week) + 1)
+        shedul_days = days[int(shedul_config.start_week):int(shedul_config.end_week) + 1]
         
     times[-1] = str(times[-1]).split(':')[0] + ':' + str(times[-1]).split(':')[1]
-    print(times)
-    previewInfo = {
-        'days': days[0:int(request.form.get('days'))],
-        'breaks': breaks,
-        'times': times
-    }
-    return jsonify(previewInfo)
+    print(shedul_days)
+    return render_template('config-sheduls.html', shedul_config=shedul_config, days=shedul_days, rows = rows, breaks=breaks, start_time=start_time, start_week=days[shedul_config.start_week], end_week=days[shedul_config.end_week], times=times)
 
 @app.route('/admin-teachers')
 @login_required
@@ -120,6 +103,11 @@ def adminCourses():
 def adminParallels():
     parallels = Parallels.query.order_by(Parallels.parallel).all()
     return render_template('admin-parallels.html', parallels=parallels)
+
+@app.route('/create-sheduls')
+@login_required
+def createSheduls():
+    return render_template('create-sheduls.html')
 
 @app.route('/admin-sheduls')
 @login_required
@@ -189,9 +177,78 @@ def get_teachers():
 #--------------------
 #CRUD CONFIG HORARIOS
 #--------------------
+@app.route('/preview-config-sheduls', methods=['POST'])
+@login_required
+def previewConfigSheduls():
+    days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    rows = int(request.form.get("hours")) + int(request.form.get("breaks"))
+    breaks = request.form.get('breakHours').split(';')
+        
+    for i in range(len(breaks)):
+        breaks[i] = int(breaks[i]) - 1
+    
+    times = [timedelta(hours=int(request.form.get('startTime').split(':')[0]), minutes=int(request.form.get('startTime').split(':')[1]))]
+    for i in range(rows):
+        if i not in breaks:
+            times.append(times[i] + timedelta(minutes=int(request.form.get('hoursDuration'))))
+        else:
+            times.append(times[i] + timedelta(minutes=int(request.form.get('breakDuration'))))
+        times[i] = str(times[i]).split(':')[0] + ':' + str(times[i]).split(':')[1] + ' - ' + str(times[i + 1]).split(':')[0] + ':' + str(times[i + 1]).split(':')[1]
+        
+    times[-1] = str(times[-1]).split(':')[0] + ':' + str(times[-1]).split(':')[1]
 
+    if int(request.form.get('startWeek')) > int(request.form.get('endWeek')):
+        shedul_days = days[int(request.form.get('startWeek')):7]
+        for i in days[0:int(request.form.get('endWeek')) + 1]:
+            shedul_days.append(i)
+    else :
+        shedul_days = days[int(request.form.get('startWeek')):int(request.form.get('endWeek')) + 1]
+        
+    previewInfo = {
+        'days': shedul_days,
+        'breaks': breaks,
+        'times': times
+    }
+    return jsonify(previewInfo)
 
-
+@app.route('/edit_shedul_config', methods=['PUT'])
+@login_required
+def editShedulConfig():
+    try:
+        shedul_config = ShedulConfig.query.first()
+        shedul_config.start_week = request.form.get('startWeek')
+        shedul_config.end_week = request.form.get('endWeek')
+        shedul_config.hours = request.form.get('hours')
+        shedul_config.hours_duration = request.form.get('hoursDuration')
+        shedul_config.breaks = request.form.get('breaks')
+        shedul_config.break_duration = request.form.get('breakDuration')
+        shedul_config.break_hours = request.form.get('breakHours')
+        shedul_config.start_time = request.form.get('startTime')
+        db.session.commit()
+        return jsonify({'message': 'Configuración guardada exitosamente! :D'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+@app.route('/get_shedul_config')
+@login_required
+def getShedulConfig():
+    try:
+        shedul_config = ShedulConfig.query.first()
+        shedul_config_data = {
+            'start_week': shedul_config.start_week,
+            'end_week': shedul_config.end_week,
+            'hours': shedul_config.hours,
+            'hours_duration': shedul_config.hours_duration,
+            'breaks': shedul_config.breaks,
+            'breaks_duration': shedul_config.break_duration,
+            'breaks_hours': shedul_config.break_hours,
+            'start_time': str(shedul_config.start_time),
+        }
+        db.session.commit()
+        return jsonify(shedul_config_data)
+    except Exception as e:
+        print(e)
+        return jsonify({'error': str(e)})
 #-------------   
 #CRUD DOCENTES
 #-------------
@@ -228,7 +285,6 @@ def get_teacher_info(teacher_id):
             }
             return jsonify(teacher_info)
         else:
-            print("ssssss")
             return ({'error': 'No se le asignaron cargas horarias'})
     except Exception as e:
         return jsonify({'error': str(e)})
@@ -404,7 +460,7 @@ def get_subject(subject_id):
 def add_subject():
     if current_user.admin:
         try:
-            subject = request.form.get('subject')
+            subject = request.form.get('subject').upper()
             new_subject = Subjects(subject=subject)
 
             # Agregar el profesor a la base de datos
@@ -420,7 +476,7 @@ def edit_subject(subject_id):
     if (current_user.admin):
         try:
             subject = Subjects.query.get(subject_id)
-            subject.subject = request.form.get('subject')
+            subject.subject = request.form.get('subject').upper()
             
             # Actualizar info del profesor a la base de datos
             db.session.commit()
@@ -721,3 +777,61 @@ def delete_workload(course_id, subject_id):
                 return jsonify({'error': 'Usuario no encontrado :('})
         except Exception as e:
             return jsonify({'error': str(e)})
+        
+@app.route('/verify_workloads/<int:course_id>')
+@login_required
+def verify_workloads(course_id):
+    if(current_user.admin):
+        workloads = CourseSubjectTeacher.query.filter_by(course_id=course_id).all()
+        try:
+            totalHours = 0
+            for workload in workloads:
+                totalHours += workload.hours
+                
+            shedul_config = ShedulConfig.query.first()
+            if shedul_config.end_week < shedul_config.start_week:
+                shedulHours = shedul_config.hours * (9 - shedul_config.start_week + shedul_config.end_week)
+            else:
+                shedulHours = shedul_config.hours * (shedul_config.end_week - shedul_config.start_week + 1)
+        
+            if totalHours < shedulHours:
+                return jsonify({'error': 'Cargas Horarias Insuficientes! Faltan asignar ' + str(shedulHours - totalHours) + ' horas de clase'})
+            elif totalHours > shedulHours:
+                return jsonify({'error': 'Exceso de Cargas Horarias! Hay un excedente de  ' + str(totalHours - shedulHours) + ' horas de clase'})
+            else:
+                return jsonify({'message': 'Ningún problema detectado!'})
+        except Exception as e:
+            print(e)
+            return jsonify({'error': "Oops ha ocurrido un error!"})
+        
+        
+@app.route('/verify_database')
+@login_required
+def verifyDataBase():
+    if(current_user.admin):
+        courses = Courses.query.all()
+        try:
+            errors = []
+            i = 1
+            for course in courses:
+                workloads = CourseSubjectTeacher.query.filter_by(course_id=course.course_id).all()
+                totalHours = 0
+                for workload in workloads:
+                    totalHours += workload.hours
+                    
+                shedul_config = ShedulConfig.query.first()
+                if shedul_config.end_week < shedul_config.start_week:
+                    shedulHours = shedul_config.hours * (9 - shedul_config.start_week + shedul_config.end_week)
+                else:
+                    shedulHours = shedul_config.hours * (shedul_config.end_week - shedul_config.start_week + 1)
+            
+                if totalHours < shedulHours:
+                    errors.append("Cargas Horarias Insuficientes en " + course.course + ' ' + course.parallel.parallel + '! Faltan asignar ' + str(shedulHours - totalHours) + ' horas de clase')
+                elif totalHours > shedulHours:
+                    errors.append('Exceso de Cargas Horarias! Hay un excedente de  ' + str(totalHours - shedulHours) + ' horas de clase en ' + course.course + ' ' + course.parallel.parallel)
+                i += 1
+            print(errors)
+            return jsonify({'errors': errors,'message': 'La Base De Datos no presentó inconsistencias :D'})
+        except Exception as e:
+            print(e)
+            return jsonify({'error': "Oops ha ocurrido un error!"})

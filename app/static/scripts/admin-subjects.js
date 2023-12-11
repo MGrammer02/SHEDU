@@ -9,7 +9,7 @@ openModal = (modal, edit, subjectId) => {
         })
         .catch(error => {
             closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
-            alert(error['error'])
+            alert(error)
         });
     }
     modal.classList.remove("closed");
@@ -36,21 +36,6 @@ document.querySelector(".btn-add").addEventListener("click", (e)=> {
     action = 'upload';
     openModal(document.querySelector(".modal-container"));
 });
-
-asignCourses = (id)=> {
-    fetch(`/get_subject/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("title_modal-asign").innerHTML =  data.subject + ` | Asignar Cursos:`;
-            document.getElementById("btn_modal-asign").value = "Guardar"
-            action = 'asign';
-            openModal(document.querySelector(".modal-asign-container"));
-        })
-        .catch(error => {
-            closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
-            alert(error['error'])
-        });
-};
 
 btnsEdit = (id)=> {
     document.getElementById("title_modal").innerHTML = "Actualizar Materia";
@@ -82,11 +67,11 @@ btnUpload.addEventListener("click", (e)=>{
           .then(data => {
             // Manejar la respuesta del servidor si es necesario
             alert(data['message']);
-            closeModal();
+            closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
             window.location.reload();
           })
           .catch(error => alert(error['error']));
-          closeModal();
+          closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
     } else if (action == 'asign') {
 
     } else {
@@ -98,11 +83,11 @@ btnUpload.addEventListener("click", (e)=>{
           .then(data => {
             // Manejar la respuesta del servidor si es necesario
             alert(data['message']);
-            closeModal();
+            closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
             window.location.reload();
           })
           .catch(error => alert(error['error']));
-          closeModal();
+          closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
     }
 })
 
@@ -120,5 +105,5 @@ deleteSubject = (id_subject) => {
         window.location.reload();
       })
       .catch(error => alert(error['error']));
-      closeModal();
+      closeModal(document.querySelector(".modal-container"), document.getElementById("add-info-form"));
 }

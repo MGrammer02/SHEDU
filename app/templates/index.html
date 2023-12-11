@@ -37,17 +37,17 @@
     <main class="flex-aj-c">
         <h1 class="titulo-main">{% if current_user.teacher.gender_id == 1 %}¡Bienvenido!{% else %}¡Bienvenida!{% endif %}<br><span class="name-user">{{current_user.teacher.salutation.salutation + ' ' + current_user.teacher.first_name + ' ' + current_user.teacher.first_lastname}}</span></h1>
         <div class="main_contenedor flex-aj-c">
-            <div class="main_div flex-aj-c  flex-column">
+            <div class="main_div flex-aj-c  flex-column" id="create-sheduls">
                 <div class="main-img-container flex-a-c">
                     <img class="main-img" src="{{ url_for('static', filename='images/create-horarios.png') }}" alt="Crear Horarios">
                 </div>
                 <h3 class="w-100 flex-aj-c">Crear horarios</h3>                
             </div>
-            <div class="main_div flex-aj-c flex-column">
+            <div class="main_div flex-aj-c flex-column"  id="conf-sheduls">
                 <div class="main-img-container flex-a-c">
-                    <img class="main-img" src="{{ url_for('static', filename='images/admin-horarios.png') }}" alt="Administrar horarios">
+                    <img class="main-img" src="{{ url_for('static', filename='images/conf-sheduls.png') }}" alt="Administrar horarios">
                 </div>
-                <h3 class="w-100 flex-aj-c">Administrar Horarios</h3>
+                <h3 class="w-100 flex-aj-c">Configurar Horarios</h3>
             </div> 
         </div>
     </main>

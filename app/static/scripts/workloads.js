@@ -17,7 +17,7 @@ openModal = (edit, courseId, subjectId) => {
         })
         .catch(error => {
             closeModal();
-            alert(error['error'])
+            alert(error)
         });
     }
     document.querySelector(".modal-container").classList.remove("closed");
@@ -63,6 +63,10 @@ btnsEdit = (courseId, subjectId)=> {
 document.querySelector(".icon-tabler-x").addEventListener("click", ()=>{
     closeModal();
 })
+document.querySelector(".icon-tabler-x-asign").addEventListener("click", ()=>{
+    document.querySelector(".modal-asign-container").classList.add("closed");
+    document.getElementById("asign-info").innerHTML = ''
+})
 
 let btnUpload = document.getElementById("btn_modal");
 btnUpload.addEventListener("click", (e)=>{
@@ -83,7 +87,7 @@ btnUpload.addEventListener("click", (e)=>{
             closeModal();
             window.location.reload();
           })
-          .catch(error => alert(error['error']));
+          .catch(error => alert(error));
           closeModal();
     } else {
         fetch(`/edit_workload/${action[0]}&${action[1]}`, {
@@ -97,7 +101,7 @@ btnUpload.addEventListener("click", (e)=>{
             closeModal();
             window.location.reload();
           })
-          .catch(error => alert(error['error']));
+          .catch(error => alert(error));
           closeModal();
     }
 })
@@ -115,6 +119,26 @@ deleteCourseSubject = (courseId, subjectId) => {
         alert(data['message']);
         window.location.reload();
       })
-      .catch(error => alert(error['error']));
+      .catch(error => alert(error));
       closeModal();
 }
+
+verifyWorkloads = (courseId)=> {
+    fetch(`/verify_workloads/${courseId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.querySelector(".modal-asign-container").classList.remove("closed");
+            if (data.error != undefined) {
+                document.getElementById("asign-info").innerHTML = `<span style="color:#d00;font-size:1.8rem;margin:auto">${data.error}</span>`;
+                return;
+            } else {
+                document.getElementById("asign-info").innerHTML = `<span style="color:#0d0;font-size:1.8rem;margin:auto">${data.message}</span>`;
+                return;
+            }
+        })
+        .catch(error => {
+            closeModal();
+            alert(error)
+        });
+}
+

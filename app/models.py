@@ -8,8 +8,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Modelo para la tabla `shedul_config`
 class ShedulConfig(db.Model):
     shedul_config_id = db.Column(db.Integer, primary_key=True)
-    days = db.Column(db.Integer, nullable=False)
-    start_day = db.Column(db.Integer)
+    start_week = db.Column(db.Integer)
+    end_week = db.Column(db.Integer)
     hours = db.Column(db.Integer, nullable=False)
     hours_duration = db.Column(db.Integer, nullable=False)
     breaks = db.Column(db.String(50))
